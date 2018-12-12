@@ -1,0 +1,19 @@
+Changes in kwb.misc 0.2.1
+=========================
+* added functionality of hsSelectTimeseriesInterval
+
+Changes in kwb.misc 0.2.0
+=========================
+* hsCombiLinReg: new argument "calc.rmse" (default: TRUE)
+
+Changes in kwb.misc 0.0.1
+=========================
+* integration of former "library" R files:
+  - hsLibMiaCsoData.R
+  - hsLibDataAvailability.R
+  - hsLibTimeshift.R
+  - hsLibDataSource.R,
+  - hsLibImpSenData.R
+  - hsLibRainDist.R
+  - hsLibCalib.R
+

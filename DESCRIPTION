@@ -1,0 +1,13 @@
+Package: kwb.misc
+Maintainer: Hauke Sonnenberg <hauke.sonnenberg@kompetenz-wasser.de>
+Imports: kwb.base, kwb.datetime, kwb.db, kwb.event, kwb.plot, kwb.read, 
+  kwb.utils, mvbutils, RODBC
+Author: Hauke Sonnenberg
+Version: 0.2.99
+License: GPL
+Title: Miscellaneous functions, not yet intended for distribution
+Description: Miscellaneous functions for data analysis with R at KWB, 
+  not yet intended for distribution. So far, functions of the following 
+  lib-files have been	imported: hsLibMiaCsoData.R, hsLibDataAvailability.R, 
+  hsLibTimeshift.R,	hsLibDataSource.R, hsLibImpSenData.R, hsLibRainDist.R, 
+  hsLibCalib.R.

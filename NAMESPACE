@@ -1,0 +1,83 @@
+importFrom(graphics, abline)
+importFrom(graphics, axis)
+importFrom(graphics, barplot)
+importFrom(graphics, grid)
+importFrom(graphics, legend)
+importFrom(graphics, lines)
+importFrom(graphics, mtext)
+importFrom(graphics, par)
+importFrom(graphics, plot)
+importFrom(graphics, points)
+importFrom(graphics, text)
+importFrom(graphics, title)
+
+importFrom(grDevices, dev.off)
+importFrom(grDevices, rainbow)
+
+importFrom(kwb.base, hsExampleTSeries)
+importFrom(kwb.base, hsFilterPeriod)
+importFrom(kwb.base, hsGroupByInterval)
+
+importFrom(kwb.datetime, intervalKey)
+importFrom(kwb.datetime, minTimeStep)
+importFrom(kwb.datetime, hsToPosix)
+
+importFrom(kwb.db, hsCloseMdb)
+importFrom(kwb.db, hsFields)
+importFrom(kwb.db, hsGetTable)
+importFrom(kwb.db, hsGetTimeSeries)
+importFrom(kwb.db, hsMdbTimeSeries)
+importFrom(kwb.db, hsOpenMdb)
+importFrom(kwb.db, hsPutTable)
+importFrom(kwb.db, hsSqlExTimeCond)
+importFrom(kwb.db, hsSqlExTimeGroup)
+importFrom(kwb.db, hsSqlQuery)
+
+importFrom(kwb.event, hsEventNumber)
+importFrom(kwb.event, hsEvents)
+importFrom(kwb.event, hsEventsOnChange)
+importFrom(kwb.event, hsGetEvent)
+
+importFrom(kwb.plot, niceLabels)
+
+importFrom(kwb.read, hsGetGsData2)
+
+importFrom(kwb.utils, catIf)
+importFrom(kwb.utils, collapsed)
+importFrom(kwb.utils, defaultIfNULL)
+importFrom(kwb.utils, finishAndShowPdfIf)
+importFrom(kwb.utils, hsPrepPdf)
+importFrom(kwb.utils, hsShowPdf)
+importFrom(kwb.utils, hsResolve)
+importFrom(kwb.utils, preparePdfIf)
+importFrom(kwb.utils, printIf)
+importFrom(kwb.utils, splitIntoFixSizedBlocks)
+importFrom(kwb.utils, stringList)
+importFrom(kwb.utils, underscoreToPercent)
+
+importFrom(mvbutils, foodweb)
+
+importFrom(RODBC, sqlDrop)
+importFrom(RODBC, sqlSave)
+importFrom(RODBC, sqlTables)
+
+importFrom(stats, aggregate)
+importFrom(stats, coef)
+importFrom(stats, lm)
+importFrom(stats, predict)
+importFrom(stats, rnorm)
+
+importFrom(utils, capture.output)
+importFrom(utils, combn)
+importFrom(utils, head)
+importFrom(utils, tail)
+
+if(tools:::.OStype() == "windows") {
+importFrom(utils, winDialogString)
+}
+
+exportPattern("^hs")
+exportPattern("^mia")
+export("mmdb", "documentPackageFunctionDependencies")
+export("pageAndPlot")
+export("plot_rain_events")

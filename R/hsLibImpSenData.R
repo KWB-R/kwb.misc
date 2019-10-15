@@ -237,7 +237,7 @@ hsImpGsData <- function # import SENATE's grab sample data from csv
   # Create a table for each block within the file...
 
   ## Connect to the database
-  channel <- hsOpenMdb(mdb)
+  channel <- kwb.db::hsOpenDb(mdb)
 
   # Loop through blocks
   for (moniPoint in names(res)) {

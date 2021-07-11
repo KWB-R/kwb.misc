@@ -1,6 +1,6 @@
-# kwb.misc 0.2.99
+# kwb.misc 0.2.2
 
-* Development version
+* Harmonise with [kwb.pkgbuild](https://github.com/kwb-r/kwb.pkgbuild)
 
 * Added a `NEWS.md` file to track changes to the package.
 
@@ -8,11 +8,11 @@
 
 # kwb.misc 0.2.1
 
-* added functionality of hsSelectTimeseriesInterval
+* added functionality of `hsSelectTimeseriesInterval()`
 
 # kwb.misc 0.2.0
 
-* hsCombiLinReg: new argument "calc.rmse" (default: TRUE)
+* `hsCombiLinReg()`: new argument "calc.rmse" (default: TRUE)
 
 # kwb.misc 0.0.1
 

@@ -1,6 +1,6 @@
 Package: kwb.misc
 Title: Miscellaneous functions, not yet intended for distribution
-Version: 0.2.99
+Version: 0.2.2
 Authors@R: 
     c(person(given = "Hauke",
              family = "Sonnenberg",

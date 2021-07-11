@@ -39,3 +39,4 @@ Remotes:
     github::kwb-r/kwb.event,
     github::kwb-r/kwb.plot,
     github::kwb-r/kwb.read
+RoxygenNote: 7.1.1

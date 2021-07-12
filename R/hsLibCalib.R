@@ -1,7 +1,10 @@
 # hsCalibAna -------------------------------------------------------------------
-hsCalibAna <- function 
-### Try all different combinations of events for calibration
-(
+
+#' Analyse Calibration Uncertainty
+#' 
+#' Try all different combinations of events for calibration
+#' 
+hsCalibAna <- function (
   data,
   dbg = TRUE,
   doplot = TRUE,
@@ -72,9 +75,12 @@ hsCalibAna <- function
 }
 
 # hsTestCombi ------------------------------------------------------------------
-hsTestCombi <- function
-### evaluate a specific combination of events used for calibration
-(
+
+#' Test Combination of Events
+#' 
+#' Evaluate a specific combination of events used for calibration
+#' 
+hsTestCombi <- function(
   data, 
   combi, 
   plot = TRUE, 
@@ -151,15 +157,12 @@ hsTestCombi <- function
 }
 
 # hsPlotCalOverview ------------------------------------------------------------
-hsPlotCalOverview <- function
-### plot overview of result of calibration analysis
-(
-  moniPoint,
-  parAcronym,
-  mdbCal,
-  pdf,
-  ... ##<< arguments given to hsPlotEventOverview
-  )
+
+#' Plot Results of Calibration Analysis
+#' 
+#' @param \dots arguments given to \code{\link{hsPlotEventOverview}}
+#' 
+hsPlotCalOverview <- function(moniPoint, parAcronym, mdbCal, pdf, ... )
 {
   ## Put all available calibrations into one data frame
   cdat <- hsMergeAvailCalibs(moniPoint, parAcronym, mdbCal = mdbCal)
@@ -187,14 +190,18 @@ hsPlotCalOverview <- function
 }
 
 # hsMergeAvailCalibs -----------------------------------------------------------
-hsMergeAvailCalibs <- function # merge data in available calibrations
-### merge data in available calibrations
-(
-  moniPoint,
-  parAcronym,
-  mdbCal,
-  ... ##<< arguments given to hsPlotEventOverview
-  )
+
+#' Merge Data in Available Calibrations
+#' 
+#' @param \dots arguments given to \code{\link{hsPlotEventOverview}}
+#' 
+#' @return data frame with the first two columns representing the timestamp and the
+#'   global calibration, respectively and the following columns representing
+#'   available calibrations, beginning with the "current" calibration that
+#'   is stored in the calibration database under the name 
+#'   <parAcronym>_<moniPoint>, e.g. "AFS_STA"
+#' 
+hsMergeAvailCalibs <- function(moniPoint, parAcronym, mdbCal, ... )
 {
   ## Get the current  calibration with selected and reordered columns:
   ## myDateTime, par_global, par_curCal
@@ -226,23 +233,21 @@ hsMergeAvailCalibs <- function # merge data in available calibrations
 
   ## Return the merged data frame
   cdat
-  ### data frame with the first two columns representing the timestamp and the
-  ### global calibration, respectively and the following columns representing
-  ### available calibrations, beginning with the "current" calibration that
-  ### is stored in the calibration database under the name 
-  ### <parAcronym>_<moniPoint>, e.g. "AFS_STA"
 }
 
 # hsCurCal ---------------------------------------------------------------------
-hsCurCal <- function # Current calibration
-### Get calibrated data according to current calibration
-(
+
+#' Current calibration
+#' 
+#' Get calibrated data according to current calibration
+#' 
+#' @param mdbCal Path to database containing queries that getting calibrated
+#'   data according to the currently active calibration setting
+hsCurCal <- function(
   moniPoint, 
   parAcronym,
   globOnly = FALSE,
   mdbCal = NULL
-  ## Path to database containing queries that getting calibrated data according
-  ## to the currently active calibration setting  
 ) 
 {
   if (is.null(mdbCal))
@@ -260,18 +265,16 @@ hsCurCal <- function # Current calibration
 }
 
 # hsSpecCal --------------------------------------------------------------------
-hsSpecCal <- function # Special calibration
-### Get calibrated data according to a special calibration given by its name.
-### Instead of running the prepared query in \dQuote{KWB_CAL.mdb} the specific
-### SQL query respecting the given calibratio name is built and run here.
-(
-  moniPoint, 
-  parAcronym, 
-  calName = NULL,
-  mdbCal = NULL
-  ## Path to database containing queries that getting calibrated data according
-  ## to the currently active calibration setting  
-)
+
+#' Special calibration
+#' 
+#' Get calibrated data according to a special calibration given by its name.
+#'   Instead of running the prepared query in \dQuote{KWB_CAL.mdb} the specific
+#'   SQL query respecting the given calibratio name is built and run here.
+#' 
+#' @param mdbCal Path to database containing queries that getting calibrated
+#'    data according to the currently active calibration setting
+hsSpecCal <- function(moniPoint, parAcronym, calName = NULL, mdbCal = NULL)
 {
   ## Take care to have set the time zone to "UTC" when calling hsSqlQuery!!! 
   tzone <- Sys.getenv("tz")
@@ -286,11 +289,12 @@ hsSpecCal <- function # Special calibration
 }
 
 # hsSqlExCal -------------------------------------------------------------------
-hsSqlExCal <- function
-### Generate SQL expression needed to get calibrated data
-(
-  moniPoint, parAcronym, calName = NULL
-)
+
+#' SQL to Get Calibrated Data
+#' 
+#' Generate SQL expression needed to get calibrated data
+#' 
+hsSqlExCal <- function(moniPoint, parAcronym, calName = NULL)
 {
   calName <- defaultIfNULL(calName, sprintf("%s_%s", parAcronym, moniPoint))
   
@@ -314,17 +318,21 @@ hsSqlExCal <- function
 }
 
 # hsAvailCalibs ----------------------------------------------------------------
-hsAvailCalibs <- function
-### Return names of available calibrations according to calibration database
-(
+
+#' Available Calibrations
+#' 
+#' Return names of available calibrations according to calibration database
+#' 
+#' @param skipCur if TRUE, the name of the current specification (<parAcronym>_<moniPoint>)
+#'   is excluded from the list of available calibrations
+#' @param mdbCal Path to database containing queries that getting calibrated
+#'   data according to the currently active calibration setting
+#' @return Return character vector of (filtered) calibration names
+hsAvailCalibs <- function(
   moniPoint = NULL, 
   parAcronym = NULL,
   skipCur = FALSE,
-  ### if TRUE, the name of the current specification (<parAcronym>_<moniPoint>)
-  ### is excluded from the list of available calibrations
   mdbCal = NULL,
-  ## Path to database containing queries that getting calibrated data according
-  ## to the currently active calibration setting
   dbg = FALSE
 ) 
 {
@@ -355,25 +363,28 @@ hsAvailCalibs <- function
 }
 
 # hsPlotEventOverview ----------------------------------------------------------
+
+#' Plot Event Overview
+#' 
+#' @param dat data frame with at least two columns and the timestamps being in the first
+#'   column
+#' @param evts data frame with columns \emph{tBeg} and \emph{tEnd} containing first and
+#'   last timestamp, respectively, of the events. If NULL (default) the
+#'   events are generated by calling hsEvents (using all timestamps in \code{dat}, 
+#'   this is maybe not what we want!!!)
+#' @param plotTypes vector containing the plot type (cp. type argument of plot function)
+#'   for each data column to be plotted
+#' @param \dots e.g. inset = \code{...}
+#' 
 hsPlotEventOverview <- function
-### plot overview on events... (?)
 (
   dat,
-  ### data frame with at least two columns and the timestamps being in the first
-  ### column
   evts = NULL,
-  ### data frame with columns \emph{tBeg} and \emph{tEnd} containing first and
-  ### last timestamp, respectively, of the events. If NULL (default) the
-  ### events are generated by calling hsEvents (using all timestamps in dat, 
-  ### this is maybe not what we want!!!)
   evtSepTime = 3600,
   myTitle = "Event Overview", 
   plotTypes = rep("l", ncol(dat) - 1),
-  ### vector containing the plot type (cp. type argument of plot function)
-  ### for each data column to be plotted
   dbg = TRUE, 
   ... 
-  ### e.g. inset = ...
 ) 
 {
   ## Stop if there are not at least two columns in the data frame.

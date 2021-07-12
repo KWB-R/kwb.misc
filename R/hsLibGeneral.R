@@ -1,64 +1,62 @@
 # documentPackageFunctionDependencies ------------------------------------------
-documentPackageFunctionDependencies <- structure(
-  function # plot graphs showing the dependencies between package functions
-  ### plot graphs showing the dependencies between package functions
-  (
-    packagenames, 
-    ### vector of character containing the names of the packages of which
-    ### functional dependencies are to be documented.
-    to.pdf = FALSE
-    ### if TRUE, graphical output is written to a pdf file
-  )
-  {  
-    for(packagename in packagenames) {
-      
-      print(packagename)
-      
-      library(packagename, character.only = TRUE)
-      
-      packageExpression <- paste0("package:", packagename)
-      
-      file.pdf <- preparePdfIf(
-        to.pdf, file.path(tempdir(), paste0(packagename, ".pdf"))
-      )
-      
-      foodweb(where = packageExpression, cex = 0.7)
-      
-      mtext(packageExpression, line = 2)
-      
-      for (functionname in sort(ls(packageExpression))) {
-        
-        foodweb(where = packageExpression, prune = functionname)
-        
-        mtext(paste0(packageExpression, "::", functionname), line = 2)
-      }
-      
-      finishAndShowPdfIf(to.pdf, file.pdf)
-    }  
-  }, ex = function() {
-    # get names of all installed KWB-packages
-    kwb.packages <- grep("^kwb\\\\.", library()$results[, "Package"], value = TRUE)
+
+#' plot graphs showing the dependencies between package functions
+#' 
+#' @param packagenames vector of character containing the names of the packages of which
+#'   functional dependencies are to be documented.
+#' @param to.pdf if TRUE, graphical output is written to a pdf file
+#' 
+#' @examples 
+#'   # get names of all installed KWB-packages
+#'   kwb.packages <- grep("^kwb\\\\.", library()$results[, "Package"], value = TRUE)
+#'   
+#'   # document the first package found
+#'   documentPackageFunctionDependencies(kwb.packages[1])      
+#'   
+documentPackageFunctionDependencies <- function(packagenames, to.pdf = FALSE)
+{  
+  for(packagename in packagenames) {
     
-    # document the first package found
-    documentPackageFunctionDependencies(kwb.packages[1])      
-  })
+    print(packagename)
+    
+    library(packagename, character.only = TRUE)
+    
+    packageExpression <- paste0("package:", packagename)
+    
+    file.pdf <- preparePdfIf(
+      to.pdf, file.path(tempdir(), paste0(packagename, ".pdf"))
+    )
+    
+    foodweb(where = packageExpression, cex = 0.7)
+    
+    mtext(packageExpression, line = 2)
+    
+    for (functionname in sort(ls(packageExpression))) {
+      
+      foodweb(where = packageExpression, prune = functionname)
+      
+      mtext(paste0(packageExpression, "::", functionname), line = 2)
+    }
+    
+    finishAndShowPdfIf(to.pdf, file.pdf)
+  }  
+}
 
 # pageAndPlot ------------------------------------------------------------------
-pageAndPlot <- function # output object to plots of same row number
-### capture the output of printing an object, split this output into blocks of 
-### equal size (row per page) and print these blocks as plots using
-### \code{\link{hsPrintToPlot}}
-(
-  data,
-  ### data frame to plot to pdf
-  rpp = 60,
-  ### rows per page
-  to.pdf = TRUE,
-  ### if TRUE (default) the output goes into a temporary PDF file, otherwise
-  ### to the standard plot device
-  ...
-  ### arguments to be passed to hsPrintToPlot, e.g. main, cex
-)
+
+#' output object to plots of same row number
+#' 
+#' capture the output of printing an object, split this output into blocks of 
+#'   equal size (row per page) and print these blocks as plots using
+#'   \code{\link{hsPrintToPlot}}
+#' 
+#' @param data \code{data} frame to plot to pdf
+#' @param rpp rows per page
+#' @param to.pdf if TRUE (default) the output goes into a temporary PDF file, otherwise
+#'   to the standard plot device
+#' @param \dots arguments to be passed to \code{\link{hsPrintToPlot}}, e.g. main, cex
+#' 
+pageAndPlot <- function(data, rpp = 60, to.pdf = TRUE, ...)
 {
   pdfFile <- preparePdfIf(to.pdf, landscape = FALSE)
   
@@ -71,18 +69,23 @@ pageAndPlot <- function # output object to plots of same row number
   finishAndShowPdfIf(to.pdf, pdfFile)
 }
 
-# hsPrintToPlot() --------------------------------------------------------------
+# hsPrintToPlot ----------------------------------------------------------------
+
+#' hsPrintToPlot
+#' 
+#' prints content of an object to a plot
+#' 
+#' @param data object to print
+#' @param main plot title
+#' @param addLines additional lines
+#' @param \dots additional arguments passed to legend, e.g. cex
+#' 
 hsPrintToPlot <- function
-### prints content of an object to a plot
 (
   data, 
-  ### object to print
   main = "Printed by hsPrintToPlot", 
-  ### plot title
   addLines = NULL,
-  ### additional lines
   ...
-  ### additional arguments passed to legend, e.g. cex
 ) 
 {
   .hsReset <- function(oopts, opar) {
@@ -111,12 +114,16 @@ hsPrintToPlot <- function
 }
 
 # hsUnionSqls ------------------------------------------------------------------
-hsUnionSqls <- function
-### Creates UNION-queries of given SQL queries, respecting the maximum number
-### of subqueries to be used in one and the same UNION query.
-(sqls, maxUnions) 
+
+#' hsUnionSqls
+#' 
+#' Creates UNION-queries of given SQL queries, respecting the maximum number
+#'   of subqueries to be used in one and the same UNION query.
+#' 
+#' @return vector of UNION queries
+#' 
+hsUnionSqls <- function(sqls, maxUnions) 
 {
-  
   # number of queries 
   n <- length(sqls)
   
@@ -141,14 +148,18 @@ hsUnionSqls <- function
   }
   
   usqls
-  ### vector of UNION queries
 }
 
 # hsDropExistingTable ----------------------------------------------------------
-hsDropExistingTable <- function
-### drop an existing table (user interaction)
-(channel, strTable, boolAsk = TRUE) {
-  
+
+#' hsDropExistingTable
+#' 
+#' drop an existing table (user interaction)
+#' 
+#' @return table name of created table. 
+#' 
+hsDropExistingTable <- function(channel, strTable, boolAsk = TRUE)
+{
   newName <- strTable
   
   # Does the database contain a table of that name?
@@ -187,5 +198,4 @@ hsDropExistingTable <- function
   }
   
   newName
-  ### table name of created table. 
 }

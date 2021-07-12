@@ -1,90 +1,62 @@
-#===============================================================================
-#
-# Functions related to grab samples of water quality parameters ====
-#
-#===============================================================================
-
-#===============================================================================
-#
-# Reading grab sample data from csv file(s) ====
-#
-#===============================================================================
-
 # hsGetParID -------------------------------------------------------------------
-hsGetParID <- function
-### Lookup name of water quality parameter and return its ID or NA if
-### the parameter is not yet contained in the data frame wqpNames
-(parName, wqpNames) 
+
+#' hsGetParID
+#' 
+#' Lookup name of water quality parameter and return its ID or NA if
+#'   the parameter is not yet contained in the data frame \code{wqpNames}
+#' 
+hsGetParID <- function(parName, wqpNames) 
 {
-  
   # Select dataset 
   ds <- wqpNames[wqpNames$wqpName == parName, ]
+  
   if (nrow(ds) == 0)
-    return(NA)
+    NA
   else
-    return(ds$wqpID)
+    ds$wqpID
 }
 
 # hsGetOrCreateParID -----------------------------------------------------------
-hsGetOrCreateParID <- function
-### Lookup a water quality parameter defined by (SEN-ID, name, unit) 
-(
-  parInfo, 
-  parDefs
-) 
+
+#' hsGetOrCreateParID
+#' 
+#' Lookup a water quality parameter defined by (SEN-ID, name, unit) 
+#' 
+#' @return List with two elements \emph{myParID} and \emph{parDefs}.
+#'   If the parameter defined in \emph{parInfo} was found in the list of all 
+#'   parameters \emph{parDefs} that have been found so far, the unique
+#'   parameter ID used in \code{parDefs} is returned in \emph{myParID}. If the
+#'   parameter was not found it is added to \code{parDefs} and 
+#' 
+hsGetOrCreateParID <- function(parInfo, parDefs) 
 {
-  return(list(myParID = 1, parDefs = parDefs))
-  ### List with two elements \emph{myParID} and \emph{parDefs}.
-  ### If the parameter defined in \emph{parInfo} was found in the list of all 
-  ### parameters \emph{parDefs} that have been found so far, the unique
-  ### parameter ID used in parDefs is returned in \emph{myParID}. If the
-  ### parameter was not found it is added to parDefs and 
+  list(myParID = 1, parDefs = parDefs)
 }
 
 # .hsCheckParlist --------------------------------------------------------------
-.hsCheckParlist <- function
-### check parameter information for ambiguities
-(df)
+.hsCheckParlist <- function(df)
 {
-  ## parameters with more than one kinds
   agg <- aggregate(df, by = list(df$parid), FUN = length)
   dupids <- agg[agg$parid > 1, 1]
-  
-  ## Find corresponding names by id
-  cat("\n*** Parameter ids with duplicates:\n")  
+  cat("\n*** Parameter ids with duplicates:\n")
   print(df[df$parid %in% dupids, ])
-  
-  ## Is the combination of parid, parname and unit unambiguous? 
-  agg <- aggregate(df, by = list(df$parid, df$parname, df$unit), FUN = length)
+  agg <- aggregate(df, by = list(df$parid, df$parname, df$unit), 
+                   FUN = length)
   dupids <- agg[agg$parid > 1, ]
-  
   cat("\n*** Parameters with duplicate combination of id,name,unit:\n")
   print(df[df$parid %in% dupids, ])
-  
 }
 
-#===============================================================================
-##
-## Transforming grab sample data within R objects ====
-##
-#===============================================================================
-
-#===============================================================================
-##
-## Writing grab sample data to database ====
-##
-#===============================================================================
-
 # hsGsDataListToMdb ------------------------------------------------------------
-hsGsDataListToMdb <- function
-### write table containing all grab sample data in  "all-in-one-table"-format
-### to mdb database
-(
-  gsDataList, 
-  mdb,
-  ...
-  ### arguments passed to hsPutTable
-)
+
+#' hsGsDataListToMdb
+#' 
+#' write table containing all grab sample data in  "all-in-one-table"-format
+#'   to \code{mdb} database
+#' 
+#' @param \dots arguments passed to hsPutTable
+#' 
+hsGsDataListToMdb <- function(gsDataList, mdb, ...)
 {
   ## Get vector of sorted unique parameter names
   fParNames <- as.factor(gsDataList$parName)
@@ -116,20 +88,23 @@ hsGsDataListToMdb <- function
 }
 
 # hsWriteBlockToTable ----------------------------------------------------------
-hsWriteBlockToTable <- function # write data block to database table
-### write data block to database table
-(
+
+#' write data block to database table
+#' 
+#' write data \code{block} to database table
+#' 
+#' @param tblNamePtrn name of table to be written in database. @M is replaced with the name 
+#'   of the monitoring point
+#' 
+hsWriteBlockToTable <- function(
   channel, 
   block, 
   blockName, 
   tblNamePtrn = "tblSenGrabSmp_@M",
-  ### name of table to be written in database. @M is replaced with the name 
-  ### of the monitoring point
   boolAsk,
   dbg = FALSE
   ) 
 {
-  
   ### table name pattern must contain "%M"
   if (! grepl("@M", tblNamePtrn)) {
     stop(paste("tblNamePtrn must contain \"@M\" placeholder",
@@ -204,27 +179,23 @@ hsWriteBlockToTable <- function # write data block to database table
   }
 }
 
-#===============================================================================
-##
-## Reading grab sample data from csv file(s) and writing to database ====
-##
-#===============================================================================
-
 # hsImpGsData ------------------------------------------------------------------
-hsImpGsData <- function # import SENATE's grab sample data from csv
-### import SENATE's grab sample data from csv
-(
+
+#' import SENATE's grab sample data from \code{csv}
+#' 
+#' @param csv full path to \code{csv} file
+#' @param mdb full path to MS Access database (*.mdb)
+#' @param sep separator in \code{csv} file
+#' @param dateFormat date format in \code{csv} file (default: %d/%m/%Y)
+#' @param blockBeginPtrn pattern indicating the begin of a data block in the file 
+#'   (default: Messstelle)
+#' 
+hsImpGsData <- function(
   csv, 
-  ### full path to csv file
   mdb, 
-  ### full path to MS Access database (*.mdb)
   sep = ",", 
-  ### separator in csv file
   dateFormat = underscoreToPercent("_d/_m/_Y"), 
-  ### date format in csv file (default: %d/%m/%Y)
   blockBeginPtrn = "Messstelle", 
-  ### pattern indicating the begin of a data block in the file 
-  ### (default: Messstelle)
   tblNamePtrn = "tblSenGrabSmp_@M", # @M will be replaced with monitoring point
   boolAsk = TRUE, 
   dbg = FALSE
@@ -259,17 +230,15 @@ hsImpGsData <- function # import SENATE's grab sample data from csv
   hsCloseMdb(channel)
 }
 
-#===============================================================================
-##
-## Functions for reorganizing grab sample data within existing database ====
-##
-#===============================================================================
-
 # hsGetSqls --------------------------------------------------------------------
+
+#' hsGetSqls
+#' 
+#' Returns vector of SQL strings each of which selects the values of one
+#'   water quality parameter (in one column) from table \dQuote{tbl} 
+#'   giving general column names
+#' 
 hsGetSqls <- function(mdb, tbl, mpID, belowAbove = FALSE, bis2007 = FALSE) 
-  ### Returns vector of SQL strings each of which selects the values of one
-  ### water quality parameter (in one column) from table \dQuote{tbl} 
-  ### giving general column names
 {
   cat(sprintf("\n\n*** Creating SQL queries for table %s and mpID = %d...\n\n",
               tbl, mpID))

@@ -1,41 +1,19 @@
-#
-# Author: Hauke Sonnenberg
-# Created: 2011-12
-#
-
-# na_checksum
-# read_rain_from_mdb (old: hsGetRain)
-# prepare_rain_data (old: hsPrepRain)
-# create_and_plot_rain_events (old: hsRainStudy1)
-# plot_rain_events
-# plot_given_rain_events (old: hsRainPlot2All)
-# plot_one_rain_event (old: hsRainPlot1)
-# plot_one_rain_event_2 ***
-# plot_one_rain_gauge_event ***
-# plotRainOverview ***
-# get_rain_stat *** 
-# plotDataAvailability ***
-# plotTotalPrecipitation ***
-# plot_rain_subevents_by_checksum (old: hsPlotAll)
-# plot_rain_with_subevent_lines (old: hsPlotRain)
-# plot_one_rain_event_3 (old: hsPlot1)
-# plot_rain_events_to_pdf (old: hsPrintPdf)
-
+# Example calls ----------------------------------------------------------------
 if (FALSE)
 {
   rain <- example_rain_data(1)
-  
   rainStat <- kwb.misc:::get_rain_stat(rain)
-  
   kwb.misc:::plotDataAvailability(rainStat)
   kwb.misc:::plotTotalPrecipitation(rainStat)
   kwb.misc:::plotRainOverview(rain)
-  
   kwb.misc:::plot_one_rain_gauge_event(rain, i = 3)
   kwb.misc:::plot_one_rain_event_2(rain, 1)
 }
 
 # example_rain_data ------------------------------------------------------------
+
+#' example rain data
+#' 
 example_rain_data <- function(version = 1)
 {
   if (version == 1) {
@@ -61,16 +39,16 @@ example_rain_data <- function(version = 1)
 }
 
 # na_checksum ------------------------------------------------------------------
-na_checksum <- function # number representing combination of gauges with NA-failure 
-### calculate checksum for each row of a data frame or matrix \emph{x}. 
-### Each combination of NA-occurrence in the row gets a different checksum.
-### Therefore, each column of \emph{x} is represented as a power of two
-### and for the columns in which the row contains NA the corresponding powers
-### of two are added.
-#@2011-11-29: moved from hsRainDist.r
-(
-  x
-) 
+
+#' number representing combination of gauges with NA-failure 
+#' 
+#' calculate checksum for each row of a data frame or matrix \emph{x}. 
+#'   Each combination of NA-occurrence in the row gets a different checksum.
+#'   Therefore, each column of \emph{x} is represented as a power of two
+#'   and for the columns in which the row contains NA the corresponding powers
+#'   of two are added.
+#' 
+na_checksum <- function(x) 
 {
   # Prepare a matrix with as many rows as there are rows in the rain series
   # and with each row containing a series of powers of 2: 1, 2, 4, 8...
@@ -81,10 +59,11 @@ na_checksum <- function # number representing combination of gauges with NA-fail
   rowSums(is.na(x) * m)
 }
 
-# read_rain_from_mdb (old: hsGetRain) ------------------------------------------
-read_rain_from_mdb <- function # Read Rain Data from Database
-### Read rain data from database
-(myVersion, strDb)
+# read_rain_from_mdb -----------------------------------------------------------
+
+#' Read Rain Data from Database
+#' 
+read_rain_from_mdb <- function(myVersion, strDb)
 {
   if (myVersion == 1) {
     
@@ -102,10 +81,11 @@ read_rain_from_mdb <- function # Read Rain Data from Database
   }
 }
 
-# prepare_rain_data (old: hsPrepRain) ------------------------------------------
-prepare_rain_data <- function # Prepare Rain Data
-### prepare rain data
-(
+# prepare_rain_data ------------------------------------------------------------
+
+#' Prepare Rain Data
+#' 
+prepare_rain_data <- function(
   rain, myVersion, event_sep_time = 60 * 60 * 6, signal_width = 300
 )
 {
@@ -145,19 +125,22 @@ prepare_rain_data <- function # Prepare Rain Data
   evt
 }
 
-# create_and_plot_rain_events (old: hsRainStudy1) ------------------------------
-create_and_plot_rain_events <- function # plot rain events from given rain data
-### plot rain events from given rain data.
-### Rain data is filtered for rows where signals from all gauges are available 
-### and where the sum of signals is greater than zero.
-#@2011-11-29: moved from hsRainDist.r
-(
+# create_and_plot_rain_events --------------------------------------------------
+
+#' plot rain events from given rain data
+#' 
+#' plot rain events from given rain data.
+#'   Rain data is filtered for rows where signals from all gauges are available 
+#'   and where the sum of signals is greater than zero.
+#' 
+#' @param frmRain data frame containing rain data
+#' @param strTimestamp name of timestamp field, default: "Zeitstempel"
+#' @param strPdf optional. full path to pdf output file
+#' 
+create_and_plot_rain_events <- function(
   frmRain, 
-  ### data frame containing rain data
   strTimestamp = "Zeitstempel", 
-  ### name of timestamp field, default: "Zeitstempel"
   strPdf = NULL,
-  ### optional. full path to pdf output file
   dbg = FALSE
 ) 
 {  
@@ -196,34 +179,38 @@ create_and_plot_rain_events <- function # plot rain events from given rain data
 }
 
 # plot_rain_events -------------------------------------------------------------
-plot_rain_events <- function # plot rain events from given rain data
-### plot rain events from given rain data. Either one plot per day or one plot
-### per rain event (created within this function). This function calls 
-### \code{\link{plot_given_rain_events}}
-(
+
+#' plot rain events from given rain data
+#' 
+#' plot \code{rain} \code{events} from given \code{rain} data. Either one plot per day or one plot
+#'   per \code{rain} event (created within this function). This function calls 
+#'   \code{\link{plot_given_rain_events}}
+#' 
+#' @param rain data frame containing \code{rain} data
+#' @param strTimestamp name of timestamp field, default: "Zeitstempel"
+#' @param strPdf optional. path to output pdf file
+#' @param irng vector of two integer values determining the first and last index,
+#'   respectively, in the data frame of \code{events} (created within this function) 
+#'   to be plotted. Second element can be -1 to indicate the index of the
+#'   last event. Default: c(1, -1)
+#' @param myCex default: 0.7
+#' @param myMinN minimum precipitation in mm. Events with a total depth less than this 
+#'   value are not plotted
+#' @param evtSepTime_s event separation time in seconds. Default: 6*3600 = 6 hours
+#' @param sigWidth_s \code{rain} signal width in seconds. Default: 300 = 5 minutes
+#' @param events one plot per event (\code{events} = TRUE) or one plot per day (\code{events} = FALSE)?
+#'   default: TRUE
+#' 
+plot_rain_events <- function(
   rain, 
-  ### data frame containing rain data
   strTimestamp = "Zeitstempel", 
-  ### name of timestamp field, default: "Zeitstempel"
   strPdf = NULL,
-  ### optional. path to output pdf file
   irng = c(1, -1), 
-  ### vector of two integer values determining the first and last index,
-  ### respectively, in the data frame of events (created within this function) 
-  ### to be plotted. Second element can be -1 to indicate the index of the
-  ### last event. Default: c(1, -1)
   myCex = 0.7, 
-  ### default: 0.7
   myMinN, 
-  ### minimum precipitation in mm. Events with a total depth less than this 
-  ### value are not plotted
   evtSepTime_s = 60 * 60 * 6, 
-  ### event separation time in seconds. Default: 6*3600 = 6 hours
   sigWidth_s = 300,
-  ### rain signal width in seconds. Default: 300 = 5 minutes
   events = TRUE
-  ### one plot per event (events = TRUE) or one plot per day (events = FALSE)?
-  ### default: TRUE
 ) 
 {
   t0 <- Sys.time()
@@ -271,28 +258,32 @@ plot_rain_events <- function # plot rain events from given rain data
   cat("Runtime:", Sys.time() - t0, "\n")
 }
 
-# plot_given_rain_events (old: hsRainPlot2All) ---------------------------------
-plot_given_rain_events <- function # plot rain events from rain data and event info 
-### plot all rain events from given rain data and event information. 
-### This function calls \code{\link{plot_one_rain_event_2}} in a loop over all events
-### with indices between \emph{imin} and \emph{imax}.
-(
+# plot_given_rain_events -------------------------------------------------------
+
+#' plot rain events from rain data and event info 
+#' 
+#' plot all \code{rain} events from given \code{rain} data and event information. 
+#'   This function calls \code{\link{plot_one_rain_event_2}} in a loop over all events
+#'   with indices between \emph{imin} and \emph{imax}.
+#' 
+#' @param rain data frame containing \code{rain} data
+#' @param evt event information as returned by \code{kwb.event::hsEvents}
+#' @param imin row index in \emph{evt} of first event to be considered. Default: 1 
+#' @param imax row index in \emph{evt} of last event to be considered. Set to -1 
+#'   (default) to consider all events.
+#' @param sigWidth_s \code{rain} signal width in seconds
+#' @param myCex default: 0.7
+#' @param myMinN minimum total precipitation in mm. Rain events with less precipitation are
+#'   not plotted
+#' 
+plot_given_rain_events <- function(
   rain, 
-  ### data frame containing rain data
   evt, 
-  ### event information as returned by \code{kwb.event::hsEvents}
   imin = 1, 
-  ### row index in \emph{evt} of first event to be considered. Default: 1 
   imax = -1, 
-  ### row index in \emph{evt} of last event to be considered. Set to -1 
-  ### (default) to consider all events.
   sigWidth_s, 
-  ### rain signal width in seconds
   myCex = 0.7, 
-  ### default: 0.7
   myMinN
-  ### minimum total precipitation in mm. Rain events with less precipitation are
-  ### not plotted
 ) 
 {
   # Set minimum and maximum event indices
@@ -314,13 +305,11 @@ plot_given_rain_events <- function # plot rain events from rain data and event i
   }
 }
 
-# plot_one_rain_event (old: hsRainPlot1) ---------------------------------------
-plot_one_rain_event <- function
-### plot_one_rain_event
-#@2011-11-29: moved from hsRainDist.r
-(
-  frmR, evt, i
-) 
+# plot_one_rain_event ----------------------------------------------------------
+
+#' Plot One Rain Event
+#' 
+plot_one_rain_event <- function(frmR, evt, i)
 {
   ib <- evt$iBeg[i]
   ie <- evt$iEnd[i]  
@@ -357,10 +346,15 @@ plot_one_rain_event <- function
   }
 }
 
-# plot_one_rain_event_2 (old: hsRainPlot2) -------------------------------------
-plot_one_rain_event_2 <- function # plot one rain event
-### plot one rain event by calling \code{\link{plot_one_rain_gauge_event}}
-(
+# plot_one_rain_event_2 --------------------------------------------------------
+
+#' Plot One Rain Event
+#' 
+#' plot one \code{rain} event by calling \code{\link{plot_one_rain_gauge_event}}
+#' 
+#' @param sigWidth_s \code{rain} signal width in seconds
+#' 
+plot_one_rain_event_2 <- function(
   rain,
   rainEventIndex = 1, 
   sigWidth_s = NULL, 
@@ -465,16 +459,18 @@ plot_one_rain_event_2 <- function # plot one rain event
   }
 }
 
-# plot_one_rain_gauge_event (old: hsRainPlot3) ---------------------------------
-plot_one_rain_gauge_event <- function # plot rain event
-### plot rain event
-(
+# plot_one_rain_gauge_event ----------------------------------------------------
+
+#' Plot Rain Event
+#' 
+#' @param sigWidth_s signal width in seconds
+#' @param Nmax default: 1
+#' 
+plot_one_rain_gauge_event <- function(
   rain, 
   sigWidth_s = NULL, 
-  ### signal width in seconds
   i = 2, 
   Nmax = 1, 
-  ### default: 1
   boolLabels = FALSE,   
   boolDebug = FALSE, 
   myBlue = rainbow(8)[6], # nice blue colour
@@ -594,15 +590,18 @@ plot_one_rain_gauge_event <- function # plot rain event
   }
 }
 
-# plotRainOverview (old: hsPlotRainOverview) -----------------------------------
-plotRainOverview <- function
-### minDate and maxDate must be given as "yyyy-mm-dd"
-### Timestamps of the day given in minDate are included, whereas timestamps of
-### the day given in maxDay are excluded! This way it is easy to select whole
-### months or whole years by selecting the first day of the next month/year as
-### maxDate.
-### It is assumed that all but the first columns contain rain heights!
-(
+# plotRainOverview -------------------------------------------------------------
+
+#' Plot Rain Overview
+#' 
+#' \code{minDate} and \code{maxDate} must be given as "yyyy-mm-dd"
+#'   Timestamps of the day given in \code{minDate} are included, whereas timestamps of
+#'   the day given in maxDay are excluded! This way it is easy to select whole
+#'   months or whole years by selecting the first day of the next month/year as
+#'   \code{maxDate}.
+#'   It is assumed that all but the first columns contain \code{rain} heights!
+#' 
+plotRainOverview <- function(
   rain, 
   minDate = "", 
   maxDate = "", 
@@ -668,6 +667,9 @@ plotRainOverview <- function
 }
 
 # get_rain_stat ----------------------------------------------------------------
+
+#' Get Rain Stats
+#' 
 get_rain_stat <- function(rain, strTimestamp = names(rain)[1])
 {
   stopifnot(is.data.frame(rain), strTimestamp %in% names(rain))
@@ -693,9 +695,10 @@ get_rain_stat <- function(rain, strTimestamp = names(rain)[1])
 }
 
 # plotDataAvailability ---------------------------------------------------------
-plotDataAvailability <- function # plotDataAvailability
-### plotDataAvailability
-(
+
+#' Plot Data Availability
+#' 
+plotDataAvailability <- function(
   rainStat,
   n = nrow(rainStat),
   main = "Data Availability",
@@ -731,7 +734,10 @@ plotDataAvailability <- function # plotDataAvailability
   add_value_labels(x, y, format(y, digits = 1, nsmall = 1), cex = cex)
 }
 
-# add_value_labels--------------------------------------------------------------
+# add_value_labels -------------------------------------------------------------
+
+#' Add Value Labels
+#' 
 add_value_labels <- function(x, y, labels = y, cex = 0.9)
 {
   delta_y <- kwb.plot::cmToUserWidthAndHeight(0.1)$height
@@ -743,14 +749,16 @@ add_value_labels <- function(x, y, labels = y, cex = 0.9)
 }
 
 # plotTotalPrecipitation -------------------------------------------------------
-plotTotalPrecipitation <- function # plotTotalPrecipitation
-### plotTotalPrecipitation
-(
+
+#' Plot Total Precipitation
+#' 
+#' @param rainStat data frame with column \emph{N_mm} and row names indicating rain gauge
+#'   names
+#' @param n number of rain series
+#' 
+plotTotalPrecipitation <- function(
   rainStat,
-  ### data frame with column \emph{N_mm} and row names indicating rain gauge
-  ### names
   n = nrow(rainStat),
-  ### number of rain series
   main = "Total Precipitation",
   Nmax_mm = NA,
   cex = 0.9
@@ -779,12 +787,11 @@ plotTotalPrecipitation <- function # plotTotalPrecipitation
   add_value_labels(x, y, cex = cex)
 }
 
-# plot_rain_subevents_by_checksum (old: hsPlotAll) -----------------------------
-plot_rain_subevents_by_checksum <- function
-### plot_rain_subevents_by_checksum
-(
-  rain, evt, n = nrow(evt)
-) 
+# plot_rain_subevents_by_checksum ----------------------------------------------
+
+#' Plot Rain Subevents by Checksum
+#' 
+plot_rain_subevents_by_checksum <- function(rain, evt, n = nrow(evt)) 
 {
   # For each rain event
   for (i in seq_len(n)) {
@@ -810,14 +817,11 @@ plot_rain_subevents_by_checksum <- function
   }
 }
 
-# plot_rain_with_subevent_lines (old: hsPlotRain) ------------------------------
-plot_rain_with_subevent_lines <- function # plot_rain_with_subevent_lines
-### plot_rain_with_subevent_lines
-(
-  rain, 
-  subevt, 
-  rainEventIndex
-) 
+# plot_rain_with_subevent_lines ------------------------------------------------
+
+#' Plot Rain with Subevent Lines
+#' 
+plot_rain_with_subevent_lines <- function(rain, subevt, rainEventIndex) 
 {
   n <- ncol(rain) - 2 # without timestamp, checksum
   ma <- max(rain[, 2:(n + 1)], na.rm = TRUE)
@@ -852,12 +856,11 @@ plot_rain_with_subevent_lines <- function # plot_rain_with_subevent_lines
   }
 }
 
-# plot_one_rain_event_3 (old: hsPlot1) -----------------------------------------
-plot_one_rain_event_3 <- function
-### plot_one_rain_event_3
-(
-  frmR, evt, i, myCols
-) 
+# plot_one_rain_event_3 --------------------------------------------------------
+
+#' Plot One Rain Event 3
+#' 
+plot_one_rain_event_3 <- function(frmR, evt, i, myCols)
 {
   ib <- evt$evtBeg_i[i]
   ie <- evt$evtEnd_i[i]
@@ -891,10 +894,11 @@ plot_one_rain_event_3 <- function
   }
 }
 
-# plot_rain_events_to_pdf (old: hsPrintPdf) ------------------------------------
-plot_rain_events_to_pdf <- function
-### plot_rain_events_to_pdf
-(
+# plot_rain_events_to_pdf ------------------------------------------------------
+
+#' Plot Rain Events to PDF
+#' 
+plot_rain_events_to_pdf <- function(
   frmR, evt, strPdf, myCols, myVersion = 1
 ) 
 {

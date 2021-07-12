@@ -1,34 +1,38 @@
 # hsAllTimeshiftPlots ----------------------------------------------------------
-hsAllTimeshiftPlots <- function
-### For one water quality parameter, all overflow events given in "evt" are
-### plotted in different scales given by "fracts" (fractions of interval 
-### length). The time-series of the water quality parameter at the container, 
-### upstream and downstream are plotted over time as well as the flow.
-###@2011-11-25: moved to here
-###@2011-12-13: renamed from hsPlotAll; new parameters
-(
+
+#' All Timeshift Plots
+#' 
+#' For one water quality parameter, all overflow events given in "evt" are
+#' plotted in different scales given by "fracts" (fractions of interval length).
+#' The time-series of the water quality parameter at the container, upstream and
+#' downstream are plotted over time as well as the flow.
+#' @2011-11-25: moved to here
+#' @2011-12-13: renamed from hsPlotAll; new parameters
+#' 
+#' @param frmOrig Original time-series 
+#' @param frmUs upstream shifted time-series
+#' @param frmDs downstream shifted time-series
+#' @param evt event list
+#' @param fieldNames vector containing the relevant table field names as named elements:
+#'   tsOrig: timestamp in Q time-series), 
+#'   tsUsDs: timestamp in us/ds time-series),
+#'   fieldQ: name of field containing Q,
+#'   fieldP: name of field containing wq parameter
+#' @param plusOverview If true, one plot comprising the whole time-series in \code{frmOrig} is added
+#' @param type1 Plot type (default: "l" = line)
+#' @param fracts Vector of scaling factors. For each factor a plot is generated representing
+#'   the corresponding fraction of the whole time interval of the event. 
+#'   A factor of zero will plot the whole event.
+#' @param fieldPrefix Default: ""
+hsAllTimeshiftPlots <- function(
   frmOrig, 
-  ### Original time-series 
   frmUs, 
-  ### upstream shifted time-series
   frmDs, 
-  ### downstream shifted time-series
   evt, 
-  ### event list
   fieldNames,
-  ### vector containing the relevant table field names as named elements:
-  ### tsOrig: timestamp in Q time-series), 
-  ### tsUsDs: timestamp in us/ds time-series),
-  ### fieldQ: name of field containing Q,
-  ### fieldP: name of field containing wq parameter
   plusOverview = FALSE, 
-  ### If true, one plot comprising the whole time-series in frmOrig is added
   type1 = "l", 
-  ### Plot type (default: "l" = line)
   fracts = c(0, 0.75,0.5,0.25,0.1,0.05),
-  ### Vector of scaling factors. For each factor a plot is generated representing
-  ### the corresponding fraction of the whole time interval of the event. 
-  ### A factor of zero will plot the whole event.
   fieldPrefix = ""
 ) 
 {  
@@ -48,13 +52,14 @@ hsAllTimeshiftPlots <- function
 }
 
 # hsTimeshiftPlot --------------------------------------------------------------
-hsTimeshiftPlot <- function
-### A plot is generated, containing flow measurements as well as 
-### measurements (original, upstream/downstream time-shifted) of one 
-### water quality parameter and for one overflow events i contained in the
-### event list "evt".
-# @2011-11-25: moved here
-(
+
+#' Timeshift Plot
+#' 
+#' A plot is generated, containing flow measurements as well as measurements
+#' (original, upstream/downstream time-shifted) of one water quality parameter
+#' and for one overflow events \code{i} contained in the event list "evt".
+#' 
+hsTimeshiftPlot <- function(
   frmOrig, 
   frmUs, 
   frmDs, 
@@ -67,7 +72,6 @@ hsTimeshiftPlot <- function
   fieldPrefix = ""
 ) 
 {
-
 	# Extract field names
 	strTsOrig <- as.character(fieldNames$tsOrig) # timestamp in Q time-series
 	strTsUsDs <- as.character(fieldNames$tsUsDs) # timestamp in us/ds time-series
@@ -205,35 +209,40 @@ hsTimeshiftPlot <- function
 		col    = c("red", "blue", "green", "black"), 
 		border = NULL
 	) 
-  
 }
 
 # hsTimeshift ------------------------------------------------------------------
-hsTimeshift <- function
-### upstream or downstream "timeshift" of water quality data given time-series
-### of hydraulic and water quality data in one data frame
-(
+
+#' Timeshift
+#' 
+#' \code{upstream} or downstream "timeshift" of water quality data given
+#' time-series of hydraulic and water quality data in one data frame
+#' 
+#' @param hq hydraulic and water quality data in one data frame
+#' @param threshold Threshold that shall be reached/exceeded by the sum of
+#'   successive values in column \emph{valField} of which the maximum time
+#'   difference is below or equal \emph{maxTDiff}.
+#' @param upstream if TRUE, the algorithm \dQuote{looks} \code{upstream}, else
+#'   downstream
+#' @param tsField name of timestamp field in \emph{hq}
+#' @param valField name of column in \emph{hq} containing the values to be
+#'   summed up until the \code{threshold} is reached
+#' @param quaFields vector containing column names of water quality parameters,
+#'   e.g. c("AFS", "CSB", "CSBf")
+#' @param maxTDiff Maximum allowed time difference in seconds between two
+#'   related timestamps.
+#' @param valFactor factor to be applied to column \emph{valField} before
+#'   calculating value sums.
+#' 
+hsTimeshift <- function(
   hq,
-  ### hydraulic and water quality data in one data frame
   threshold,
-  ### Threshold that shall be reached/exceeded by the sum of successive
-  ### values in column \emph{valField} of which the maximum time difference is
-  ### below or equal \emph{maxTDiff}.
   upstream = TRUE,
-  ### if TRUE, the algorithm \dQuote{looks} upstream, else downstream
   tsField = names(hq)[1],  
-  ### name of timestamp field in \emph{hq}
   valField = names(hq)[2],
-  ### name of column in \emph{hq} containing the values to be summed up until
-  ### the threshold is reached
   quaFields = names(hq)[-c(1, 2)],
-  ### vector containing column names of water quality parameters, 
-  ### e.g. c("AFS", "CSB", "CSBf")
   maxTDiff = 3600,
-  ### Maximum allowed time difference in seconds between two related timestamps.
   valFactor = 1,
-  ### factor to be applied to column \emph{valField} before calculating value
-  ### sums.
   dbg = FALSE
 ) 
 {
@@ -315,102 +324,83 @@ hsTimeshift <- function
 }
 
 # .hsCumToSum ------------------------------------------------------------------
-.hsCumToSum <- function # experimental!!! 
-### I was looking for an easier function than hsIntSumGeThreshold
-(
-  x,
-  ### data frame. First column is assumed to contain timestamps, second column 
-  ### to contain values to be cumulated  
-  threshold = 500
-)
-{
-  if (class(x) != "data.frame" || (ncol(x)) < 2)
+.hsCumToSum <- function(x, threshold = 500) {
+  if (class(x) != "data.frame" || (ncol(x)) < 2) 
     stop("x must be a data frame of at least two columns.")
-
-  ## Calculate the cumulated sum of the value column
   cs <- cumsum(x[[2]])
-
-  ## number of rows
   n <- nrow(x)
-  
-  ## Prepare vector storing indices of assigned timestamps
   ia <- integer(0)
   sumSoFar <- double(0)
-  
-  ## Calculate sums of values within time intervals by calculating the
-  ## difference of corresponding cumulated sums.
-  for (i in 1:(n-1)) {
-
-    ## Show progress
-    if (i %% 100 == 0)
-      cat(i, "/", n-1, "\n")
-    
-    ## adapt range of indices
-    rng <- (1+i):n
-    
-    ## indices with no assignment yet but where the sum of values 
-    ## reaches/overtops the threshold now
-    csum <- cs[rng] - cs[rng-i]
-    thhr <- (csum >= threshold) # threshold reached?
+  for (i in 1:(n - 1)) {
+    if (i%%100 == 0) 
+      cat(i, "/", n - 1, "\n")
+    rng <- (1 + i):n
+    csum <- cs[rng] - cs[rng - i]
+    thhr <- (csum >= threshold)
     bsel <- thhr & (is.na(ia[rng] | csum < sumSoFar[rng]))
     sumSoFar[rng[bsel]] <- csum[bsel]
     idx <- rng[bsel]
-    ia[idx] <- (1:n)[idx-i]
-    
+    ia[idx] <- (1:n)[idx - i]
   }
   cat("\n")
-  
-  ## get assigned timestamps from assigned indices
   tassign <- x[ia, 1]
-  
-  ## create result data frame
-  data.frame(ia, v = x[[2]], cs, sumSoFar, t=x[[1]], tassign, td = x[[1]]-tassign)
+  data.frame(ia, v = x[[2]], cs, sumSoFar, t = x[[1]], tassign, 
+             td = x[[1]] - tassign)
 }
 
 # hsIntSumGeThreshold ----------------------------------------------------------
-hsIntSumGeThreshold <- function
-### \dQuote{Interval sum greater or equal threshold}. 
-### For each index <iStart> of vector \emph{values}, this function tries to find
-### a corresponding index <iStop> in such a way that the sum of the
-### vector elements at indices between <iStart> and <iStop> reaches
-### the given threshold. For each possible start index i, the algorithm starts
-### either looking forward at indices i+1, i+2, ... or backwards at indices
-### i-1, i-2, ..., accumulating the values at these indices. Once the
-### accumulated sum reached the given threshold or if the difference between
-### the indices exceeds the maximum allowed index difference \emph{maxDist}
-### the algorithm stops and continues with the next start index.
-#@2011-12-29: created
-#@2012-01-09: renamed from hsIntervalsWithSumReachingThreshold4
-#             renamed from hsIntervalSumAboveThreshold
-(
+
+#' Interval Sum >= Threshold
+#' 
+#' For each index <iStart> of vector \emph{values}, this function tries to find
+#' a corresponding index <iStop> in such a way that the sum of the vector
+#' elements at indices between <iStart> and <iStop> reaches the given
+#' \code{threshold}. For each possible start index i, the algorithm starts
+#' either looking \code{forward} at indices i+1, i+2, ... or backwards at
+#' indices i-1, i-2, ..., accumulating the values at these indices. Once the
+#' accumulated sum reached the given \code{threshold} or if the difference
+#' between the indices exceeds the maximum allowed index difference
+#' \emph{maxDist} the algorithm stops and continues with the next start index.
+#' 
+#' @param tSeries data.frame with timestamps in first column and values in
+#'   second column.
+#' @param threshold Threshold that shall be reached/exceeded by the sum of
+#'   successive elements of \emph{values} of which the maximum time difference
+#'   is below or equal \emph{maxTDiff}.
+#' @param forward If TRUE, the algorithm looks \code{forward}, else backwards,
+#'   i.e. when looking \code{forward} (backwards), the start indices <iStart>
+#'   are always less or equal (greater or equal) the assigned indices <iStop>.
+#' @param maxTDiff Maximum allowed time difference in seconds between two
+#'   related timestamps.
+#' @param tsField Name of time stamp field; default: name of first column
+#' @param valField Name of value field containing the values of which the sum
+#'   shall reach the \code{threshold}; default: name second column
+#' @param valFactor Factor to be applied to column \emph{valField} before
+#'   calculating value sums.
+#' @param includeIndices if TRUE, two columns \emph{iStart} and \emph{iStop} are
+#'   included in the output data frame indicating the indices in \emph{tSeries}
+#'   corresponding to the timestamps \emph{tStart} and \emph{tStop}.
+#' 
+#' @return data frame with columns \emph{iStart} and \emph{iStop} being the
+#'   indices of \emph{tSeries} that represent the beginning and the end of the
+#'   time interval in which the value field sums up to at least
+#'   \emph{threshold}, \emph{tStart}, \emph{tStop} and \emph{tDiff} representing
+#'   the first timestamp, last timestamp and duration of the corresponding time
+#'   intervals and the column \emph{sumWithin} being the sum of values that was
+#'   actially reached within the interval.
+#' 
+hsIntSumGeThreshold <- function(
   tSeries,
-  ### data.frame with timestamps in first column and values in second column.
   threshold,
-  ### Threshold that shall be reached/exceeded by the sum of successive
-  ### elements of \emph{values} of which the maximum time difference is
-  ### below or equal \emph{maxTDiff}.
   forward,
-  ### If TRUE, the algorithm looks forward, else backwards, i.e. when looking
-  ### forward (backwards), the start indices <iStart> are always
-  ### less or equal (greater or equal) the assigned indices <iStop>.
   maxTDiff,
-  ### Maximum allowed time difference in seconds between two related timestamps.
   tsField = names(tSeries)[1],
-  ### Name of time stamp field; default: name of first column
   valField = names(tSeries)[2],
-  ### Name of value field containing the values of which the sum shall reach the
-  ### threshold; default: name second column
   valFactor = 1,
-  ### Factor to be applied to column \emph{valField} before calculating value
-  ### sums.
   includeIndices = TRUE,
-  ### if TRUE, two columns \emph{iStart} and \emph{iStop} are included in the
-  ### output data frame indicating the indices in \emph{tSeries} corresponding
-  ### to the timestamps \emph{tStart} and \emph{tStop}.
   dbg = FALSE
 ) 
 {
-
   ## sub-function next.i
   next.i <- function(st) {
     if (dbg) cat("-> Next i.")
@@ -565,12 +555,4 @@ hsIntSumGeThreshold <- function
     res <- res[, -c(1, 2)]
 
   res
-  ### data frame with columns \emph{iStart} and \emph{iStop} being the indices of 
-  ### \emph{tSeries} that represent the beginning and the end of the time interval 
-  ### in which the value field sums up to at least \emph{threshold}, \emph{tStart}, 
-  ### \emph{tStop} and \emph{tDiff} representing the first timestamp, last timestamp 
-  ### and duration of the corresponding time intervals and the column 
-  ### \emph{sumWithin} being the sum of values that was actially reached within 
-  ### the interval.
 }
-

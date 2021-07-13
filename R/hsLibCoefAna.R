@@ -1,16 +1,21 @@
-# hsExampleCoefData() ----------------------------------------------------------
+# hsExampleCoefData ------------------------------------------------------------
+
+#' hsExampleCoefData
+#' 
+#' provide example dataset for coefficient analysis with \code{\link{hsCoefAna}}
+#' 
+#' @param nevts number of gaps to be produced in continuous examle data in order to split
+#'   events. default: 5
+#' @param step timestep in seconds. default: 30
+#' @param ex.avail example data available? default: FALSE
+#' @param dev deviation. default: 0.01
+#' @param dbg If \code{TRUE}, debug messages are shown  
 hsExampleCoefData <- function
-### provide example dataset for coefficient analysis with hsCoefAna
 (
   nevts = 5, 
-  ### number of gaps to be produced in continuous examle data in order to split
-  ### events. default: 5
   step = 30,
-  ### timestep in seconds. default: 30
   ex.avail = FALSE,
-  ### example data available? default: FALSE
   dev = 0.01,
-  ### deviation. default: 0.01
   dbg = FALSE
 ) 
 {  
@@ -53,26 +58,29 @@ hsExampleCoefData <- function
   dat
 }
 
-# hsEqualUntilPos() ------------------------------------------------------------
-hsEqualUntilPos <- function
-### returns the first index at which elements in combi1 and combi2 differ
-(
-  combi1, 
-  ### vector 
-  combi2
-  ### vector of same mode as combi1
-) 
+# hsEqualUntilPos --------------------------------------------------------------
+
+#' hsEqualUntilPos
+#' 
+#' returns the first index at which elements in \code{combi1} and \code{combi2} differ
+#' 
+#' @param combi1 vector 
+#' @param combi2 vector of same mode as \code{combi1}
+#' 
+hsEqualUntilPos <- function(combi1, combi2) 
 {
   ### Index until which elements in combi1 and combi2 are the same
   ifelse(combi1[1] != combi2[1], 0, hsEventsOnChange(combi1 == combi2)$iEnd[1])
 }
 
-# hsAllCombis() ----------------------------------------------------------------
-hsAllCombis <- function
-### Generate all possible combinations of elements in x with order mattering
-(
-  x
-) 
+# hsAllCombis ------------------------------------------------------------------
+
+#' hsAllCombis
+#' 
+#' Generate all possible combinations of elements in \code{x} with order mattering
+#' 
+#' @param x vector of elements of which to create combinations
+hsAllCombis <- function(x) 
 {  
   ## stop condition
   if (length(x) == 1) {
@@ -87,18 +95,18 @@ hsAllCombis <- function
   res
 }
 
-# hsNextCoefAnaCombi() ---------------------------------------------------------
-hsNextCoefAnaCombi <- function
-### given a current combination the next combination of events as used for 
-### coefficient analysis is provided
+# hsNextCoefAnaCombi -----------------------------------------------------------
 
-(
-  combi, 
-  ### current combination of which the "successor" combination is to be 
-  ### provided
-  n
-  ### number of elements in the combination (= length of combination)
-) 
+#' hsNextCoefAnaCombi
+#' 
+#' given a current combination the next combination of events as used for 
+#'   coefficient analysis is provided
+#' 
+#' @param combi current combination of which the "successor" combination is to be 
+#'   provided
+#' @param n number of elements in the combination (= length of combination)
+#' 
+hsNextCoefAnaCombi <- function(combi, n)
 {
   nextCombi <- NULL
   l <- length(combi)
@@ -146,16 +154,17 @@ hsNextCoefAnaCombi <- function
   return(nextCombi)
 }
 
-# hsAllCoefAnaCombis() ---------------------------------------------------------
-hsAllCoefAnaCombis <- function
-### Generates all possible combinations of events as used for coefficient
-### analysis
-(
-  n, 
-  ### number of elements to be combined
-  dbg.level = n
-  ### if not 0, combinations are shown when dbg.level-th element just changed
-) 
+# hsAllCoefAnaCombis -----------------------------------------------------------
+
+#' hsAllCoefAnaCombis
+#' 
+#' Generates all possible combinations of events as used for coefficient
+#'   analysis
+#' 
+#' @param n number of elements to be combined
+#' @param dbg.level if not 0, combinations are shown when dbg.level-th element just changed
+#' 
+hsAllCoefAnaCombis <- function(n, dbg.level = n)
 {
   combi <- 1
   combis <- list()
@@ -171,35 +180,39 @@ hsAllCoefAnaCombis <- function
   combis  
 }
 
-# hsCombiLinReg() --------------------------------------------------------------
-hsCombiLinReg <- function
-### calculation of linear regressions for given combination of events
-(
+# hsCombiLinReg ----------------------------------------------------------------
+
+#' Linear Regression for Event Combination
+#' 
+#' Calculation of linear regressions for given combination of events
+#' 
+#' @param data \code{data} frame containing columns \emph{tstamp} (time stamp), \emph{pval}
+#'   (probe value), \emph{lval} (lab value), \emph{evtID} (event ID)
+#' @param combi combination of events for which linear regressions are to be calculated
+#'   in the following way: the first event numbers in \code{combi}, at positions 
+#'   1:(length(\code{combi}) - 1), are considered to be "base" events, i.e. events
+#'   of which all \code{data} points are considered for the linear regression.  
+#'   The \code{data} points belonging to the event given at the last position
+#'   of \code{combi} are added "point by point" to these "base points" and each time
+#'   a separate regression is calculated
+#' @param uselm if TRUE, the lm function is used to calculate the linear regression,
+#'   otherwise (\code{uselm} == FALSE) the regression is calculated "manually" 
+#'   which is much faster. default: FALSE
+#' @param clever if TRUE, sums and means are updated by knowledge of previous values with
+#'   the current \code{data} point, otherwise they are always recalculated for all
+#'   datapoints to be considered
+#' @param prep if TRUE, \code{data} is expected to contain columns \emph{x2} (squares of x),
+#'   \emph{xy} (product of x and y values). Unfortunately, this does not give
+#'   a better performance...
+#' @param calc.rmse if TRUE, the root mean square error (RMSE) is calculated
+#' @param dbg If \code{TRUE}, debug messages are shown  
+hsCombiLinReg <- function(
   data,
-  ### data frame containing columns \emph{tstamp} (time stamp), \emph{pval}
-  ### (probe value), \emph{lval} (lab value), \emph{evtID} (event ID)
   combi,
-  ### combination of events for which linear regressions are to be calculated
-  ### in the following way: the first event numbers in combi, at positions 
-  ### 1:(length(combi) - 1), are considered to be "base" events, i.e. events
-  ### of which all data points are considered for the linear regression.  
-  ### The data points belonging to the event given at the last position
-  ### of combi are added "point by point" to these "base points" and each time
-  ### a separate regression is calculated
   uselm = FALSE,
-  ### if TRUE, the lm function is used to calculate the linear regression,
-  ### otherwise (uselm == FALSE) the regression is calculated "manually" 
-  ### which is much faster. default: FALSE
   clever = FALSE,
-  ### if TRUE, sums and means are updated by knowledge of previous values with
-  ### the current data point, otherwise they are always recalculated for all
-  ### datapoints to be considered
   prep = FALSE,
-  ### if TRUE, data is expected to contain columns \emph{x2} (squares of x),
-  ### \emph{xy} (product of x and y values). Unfortunately, this does not give
-  ### a better performance...
   calc.rmse = TRUE,
-  ### if TRUE, the root mean square error (RMSE) is calculated
   dbg = FALSE  
 ) 
 {
@@ -339,31 +352,36 @@ hsCombiLinReg <- function
   ab
 }
 
-# hsCoefAna(): Regression coefficient analysis ---------------------------------
-hsCoefAna <- function
-### regression coefficient analysis
-(
+# hsCoefAna --------------------------------------------------------------------
+
+#' hsCoefAna
+#' 
+#' regression coefficient analysis
+#' 
+#' @param data \code{data} frame containing columns \emph{tstamp} (time stamp), \emph{pval}
+#'   (probe value), \emph{lval} (lab value), \emph{evtID} (event ID)
+#' @param recursive if TRUE, the \code{recursive} version hsCoefAnaRes of the regression coefficient 
+#'   analysis is used, otherwise the non-recursive version. default: TRUE
+#' @param evtNums event numbers to be considered for the analysis. Only considered when
+#'   \emph{recursive} == TRUE. default: all distinct values provided in 
+#'   column \emph{evtID} of \emph{data})
+#' @param aslist default: boolean value given in \emph{recursive}
+#' @param uselm if TRUE, the lm function is used to calculate the linear regression,
+#'   otherwise (\code{uselm} == FALSE) the regression is calculated "manually" 
+#'   which is much faster. Default: FALSE
+#' @param prep Default: FALSE
+#' @param \dots further arguments passed to \code{\link{hsCombiLinReg}}, e.g. \emph{clever}
+#' @param dbg.level default: max(2, length(\code{evtNums}) - 8)
+#' 
+hsCoefAna <- function(
   data, 
-  ### data frame containing columns \emph{tstamp} (time stamp), \emph{pval}
-  ### (probe value), \emph{lval} (lab value), \emph{evtID} (event ID)
   recursive = TRUE,
-  ### if TRUE, the recursive version hsCoefAnaRes of the regression coefficient 
-  ### analysis is used, otherwise the non-recursive version. default: TRUE
   evtNums = unique(data$evtID), 
-  ### event numbers to be considered for the analysis. Only considered when
-  ### \emph{recursive} == TRUE. default: all distinct values provided in 
-  ### column \emph{evtID} of \emph{data})
   aslist = recursive,
-  ### default: boolean value given in \emph{recursive}
   uselm = FALSE,
-  ### if TRUE, the lm function is used to calculate the linear regression,
-  ### otherwise (uselm == FALSE) the regression is calculated "manually" 
-  ### which is much faster. default: FALSE
   prep = FALSE,
   ...,
-  ### further arguments passed to hsCombiLinReg, e.g. \emph{clever}
   dbg.level = max(2, length(evtNums) - 8)
-  ### default: max(2, length(evtNums) - 8)
 ) 
 {
   ## prepare columns containing precalculated products
@@ -392,30 +410,48 @@ hsCoefAna <- function
   }
 }
 
-# hsCoefAnaRec(): Regression coefficient analysis ------------------------------
+# hsCoefAnaRec -----------------------------------------------------------------
+
+#' hsCoefAnaRec
+#' 
+#' recursive version of regression coefficient analysis
+#' 
+#' @param data \code{data} frame containing columns \emph{tstamp} (time stamp), \emph{pval}
+#'   (probe value), \emph{lval} (lab value), \emph{evtID} (event ID)
+#' @param evtNums event numbers to be considered for the analysis (default: all distinct
+#'   values provided in column \emph{evtID} of \emph{data})
+#' @param combi current combination to be evaluated and to be the base for the next 
+#'   combinations to be determined
+#' @param tree if TRUE, result is given in a \code{tree} structure, otherwise as a \code{data} frame
+#' @param resframe if \emph{tree} is FALSE, this argument contains the results that have
+#'   been found so far in a \code{data} frame
+#' @param uselm if TRUE, the lm function is used to calculate the linear regression,
+#'   otherwise (\code{uselm} == FALSE) the regression is calculated "manually" 
+#'   which is much faster. default: FALSE
+#' @param \dots further arguments passed to \code{\link{hsCombiLinReg}}, e.g. \emph{clever}
+#' @param dbg.level debug level
+#' @return Recursive list representing a \code{tree} structure. At the top level the list
+#'   contains elements \emph{e<i>} where <i> are the event IDs to be considered 
+#'   (elements in \emph{evtNums}).
+#'   The sub lists below the top level (but not the "leafs" of the \code{tree}) also 
+#'   contain elements \emph{e<j>} where <j> are the "remaining" event IDs, 
+#'   i.e. the IDs that do not yet occur in the "path" of event IDs
+#'   leading to the respective sub \code{tree}. These sub lists also have elements
+#'   \emph{combi} (vector of event IDs representing the respective event 
+#'   combination) and \emph{linreg} containing the results from linear 
+#'   regression. In fact, \emph{linreg} is a \code{data} frame with each line 
+#'   representing the \emph{slope} and \emph{offset} of the linear regression 
+#'   through \emph{np} number of points, taken from the events in \emph{combi}.
+#' 
 hsCoefAnaRec <- function
-### recursive version of regression coefficient analysis
 (
   data, 
-  ### data frame containing columns \emph{tstamp} (time stamp), \emph{pval}
-  ### (probe value), \emph{lval} (lab value), \emph{evtID} (event ID)
   evtNums = unique(data$evtID), 
-  ### event numbers to be considered for the analysis (default: all distinct
-  ### values provided in column \emph{evtID} of \emph{data})
   combi = NULL, 
-  ### current combination to be evaluated and to be the base for the next 
-  ### combinations to be determined
   tree = TRUE,
-  ### if TRUE, result is given in a tree structure, otherwise as a data frame
   resframe = NULL,
-  ### if \emph{tree} is FALSE, this argument contains the results that have
-  ### been found so far in a data frame
   uselm = FALSE,
-  ### if TRUE, the lm function is used to calculate the linear regression,
-  ### otherwise (uselm == FALSE) the regression is calculated "manually" 
-  ### which is much faster. default: FALSE
   ...,
-  ### further arguments passed to hsCombiLinReg, e.g. \emph{clever}
   dbg.level = 1
 ) 
 {  
@@ -494,41 +530,28 @@ hsCoefAnaRec <- function
     options(stringsAsFactors = strAsFac)
     resframe
   }
-  
-  ### Recursive list representing a tree structure. At the top level the list
-  ### contains elements \emph{e<i>} where <i> are the event IDs to be considered 
-  ### (elements in \emph{evtNums}).
-  ### The sub lists below the top level (but not the "leafs" of the tree) also 
-  ### contain elements \emph{e<j>} where <j> are the "remaining" event IDs, 
-  ### i.e. the IDs that do not yet occur in the "path" of event IDs
-  ### leading to the respective sub tree. These sub lists also have elements
-  ### \emph{combi} (vector of event IDs representing the respective event 
-  ### combination) and \emph{linreg} containing the results from linear 
-  ### regression. In fact, \emph{linreg} is a data frame with each line 
-  ### representing the \emph{slope} and \emph{offset} of the linear regression 
-  ### through \emph{np} number of points, taken from the events in \emph{combi}.
 }
 
-# hsCoefAnaNonRec(): Regression coefficient analysis ---------------------------
-hsCoefAnaNonRec <- function
-### non-recursive version of regression coefficient analysis
-(
-  data, 
-  ### data frame containing columns \emph{tstamp} (time stamp), \emph{pval}
-  ### (probe value), \emph{lval} (lab value), \emph{evtID} (event ID)
-  uselm = FALSE,
-  ### if TRUE, the lm function is used to calculate the linear regression,
-  ### otherwise (uselm == FALSE) the regression is calculated "manually" 
-  ### which is much faster. default: FALSE
-  aslist = FALSE,
-  ### if TRUE the result is retunred in forms of a list with each list element
-  ### representing one combination. otherwise in forms of a database with
-  ### columns \emph{np} (number of points), \emph{offset}, \emph{slope},
-  ### \emph{combi}. Default: FALSE.
-  ...,
-  ### further arguments passed to hsCombiLinReg, e.g. \emph{clever}
-  dbg.level = 1
-) 
+# hsCoefAnaNonRec --------------------------------------------------------------
+
+#' hsCoefAnaNonRec
+#' 
+#' non-recursive version of regression coefficient analysis
+#' 
+#' @param data \code{data} frame containing columns \emph{tstamp} (time stamp), \emph{pval}
+#'   (probe value), \emph{lval} (lab value), \emph{evtID} (event ID)
+#' @param uselm if TRUE, the lm function is used to calculate the linear regression,
+#'   otherwise (\code{uselm} == FALSE) the regression is calculated "manually" 
+#'   which is much faster. default: FALSE
+#' @param aslist if TRUE the result is retunred in forms of a list with each list element
+#'   representing one combination. otherwise in forms of a database with
+#'   columns \emph{np} (number of points), \emph{offset}, \emph{slope},
+#'   \emph{combi}. Default: FALSE.
+#' @param \dots further arguments passed to \code{\link{hsCombiLinReg}}, e.g. \emph{clever}
+#' @param dbg.level debug level
+hsCoefAnaNonRec <- function(
+  data, uselm = FALSE, aslist = FALSE, ..., dbg.level = 1
+)
 {  
   # set option "stringsAsFactors" to FALSE
   strAsFac <- getOption("stringsAsFactors")
@@ -571,19 +594,18 @@ hsCoefAnaNonRec <- function
   result
 }
 
-# hsPlotCoefAnaRes() -----------------------------------------------------------
-hsPlotCoefAnaRes <- function
-### Plot function to visualise the regression lines calculated by hsCoefAna.
-(
-  data, 
-  ### data frame containing columns \emph{tstamp} (time stamp), \emph{pval}
-  ### (probe value), \emph{lval} (lab value), \emph{evtID} (event ID)
-  res, 
-  ### result tree as returned by hsCoefAna.
-  recursive = FALSE
-) 
+# hsPlotCoefAnaRes -------------------------------------------------------------
+
+#' hsPlotCoefAnaRes
+#' 
+#' Plot function to visualise the regression lines calculated by \code{\link{hsCoefAna}}.
+#' 
+#' @param data \code{data} frame containing columns \emph{tstamp} (time stamp), \emph{pval}
+#'   (probe value), \emph{lval} (lab value), \emph{evtID} (event ID)
+#' @param res result tree as returned by \code{\link{hsCoefAna}}.
+#' @param recursive Default: FALSE
+hsPlotCoefAnaRes <- function(data, res, recursive = FALSE)
 {
-  
   col.all  <- "lightgrey"
   col.base <- "darkgrey"
   
@@ -642,21 +664,20 @@ hsPlotCoefAnaRes <- function
   }
 }
 
-# hsPlotCoefAnaRes2() ----------------------------------------------------------
-hsPlotCoefAnaRes2 <- function
-### Plot function to visualise the distribution of slopes and offsets of 
-### regression lines through possible combinations of events.
-(
-  data, 
-  ### data frame containing columns \emph{tstamp} (time stamp), \emph{pval}
-  ### (probe value), \emph{lval} (lab value), \emph{evtID} (event ID)
-  res, 
-  ### result tree as returned by hsCoefAna.
-  olim = NULL, 
-  ### limits of offset values to be used for plotting the offsets
-  slim = NULL
-  ### limits of slope values to be used for plotting the offsets
-) 
+# hsPlotCoefAnaRes2 ------------------------------------------------------------
+
+#' hsPlotCoefAnaRes2
+#' 
+#' Plot function to visualise the distribution of slopes and offsets of 
+#'   regression lines through possible combinations of events.
+#' 
+#' @param data \code{data} frame containing columns \emph{tstamp} (time stamp), \emph{pval}
+#'   (probe value), \emph{lval} (lab value), \emph{evtID} (event ID)
+#' @param res result tree as returned by \code{\link{hsCoefAna}}.
+#' @param olim limits of offset values to be used for plotting the offsets
+#' @param slim limits of slope values to be used for plotting the offsets
+#' 
+hsPlotCoefAnaRes2 <- function(data, res, olim = NULL, slim = NULL)
 {
   opar <- par(mfcol = c(2, 1))
   
@@ -682,14 +703,16 @@ hsPlotCoefAnaRes2 <- function
   par(opar)
 }
 
-# hsBrowseCoefAnaRes() ---------------------------------------------------------
-hsBrowseCoefAnaRes <- function
-### Browse through result tree of regression coefficient analysis and "rbind"
-### data frames \emph{linreg}
-(
-  tree, 
-  combilen = -1
-) 
+# hsBrowseCoefAnaRes -----------------------------------------------------------
+
+#' hsBrowseCoefAnaRes
+#' 
+#' Browse through result \code{tree} of regression coefficient analysis and "rbind"
+#'   data frames \emph{linreg}
+#' 
+#' @param tree list representing a \code{tree} structure as returned by \code{\link{hsCoefAna}}
+#' @param combilen length of combinations. Default: -1
+hsBrowseCoefAnaRes <- function(tree, combilen = -1)
 {
   if (combilen == -1) {
     # set option "stringsAsFactors" to FALSE
@@ -715,15 +738,16 @@ hsBrowseCoefAnaRes <- function
   res
 }
 
-# hsBrowseCoefAnaResList() -----------------------------------------------------
-hsBrowseCoefAnaResList <- function
-### Browse through result tree of regression coefficient analysis and "rbind"
-### data frames \emph{linreg}
-(
-  reslist,
-  ### result list as returned by hsCoefAna(..., recursive = FALSE, aslist = TRUE))
-  dbg.level = 10
-) 
+# hsBrowseCoefAnaResList -------------------------------------------------------
+
+#' hsBrowseCoefAnaResList
+#' 
+#' Browse through result tree of regression coefficient analysis and "rbind"
+#'   data frames \emph{linreg}
+#' 
+#' @param reslist result list as returned by hsCoefAna(..., recursive = FALSE, aslist = TRUE))
+#' @param dbg.level debug level
+hsBrowseCoefAnaResList <- function(reslist, dbg.level = 10) 
 { 
   # set option "stringsAsFactors" to FALSE
   strAsFac <- getOption("stringsAsFactors")
@@ -747,14 +771,18 @@ hsBrowseCoefAnaResList <- function
   res
 }
 
-# hsBrowseCombis() -------------------------------------------------------------
-hsBrowseCombis <- function
-### browses through result tree and collects all combinations
-(
-  tree, 
-  ### list representing a tree structure as returned by hsCoefAna
-  combis = list()
-) 
+# hsBrowseCombis ---------------------------------------------------------------
+
+#' Browse Combinations
+#' 
+#' browses through result \code{tree} and collects all combinations
+#' 
+#' @param tree list representing a \code{tree} structure as returned by \code{\link{hsCoefAna}}
+#' @param combis List of combinations. Default: \code{list()}
+#' @return list with first element containing matrix of combinations of length 1, 
+#'   second element containing matrix of combinations of length 2, and so on.
+#' 
+hsBrowseCombis <- function(tree, combis = list())
 {
   # if the root of the current (sub-)tree contains an element "combi" add this
   # combination to the result list of combinations
@@ -775,7 +803,4 @@ hsBrowseCombis <- function
     combis <- hsBrowseCombis(tree[[ele]], combis)
   }
   combis
-  ### list with first element containing matrix of combinations of length 1, 
-  ### second element containing matrix of combinations of length 2, and so on.
 }
-

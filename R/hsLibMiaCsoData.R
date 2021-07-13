@@ -1,9 +1,9 @@
 # mmdb -------------------------------------------------------------------------
-mmdb <- function # mmdb
-### mmdb
-(
-  id = 0
-) 
+
+#' Path to Metadata Database
+#' 
+#' @param id id of record. Currently, only 0 allowed (the default)
+mmdb <- function(id = 0) 
 {
   # Path to R meta database
   if (id == 0) {
@@ -12,9 +12,10 @@ mmdb <- function # mmdb
 }
 
 # hsdbg ------------------------------------------------------------------------
-hsdbg <- function # hsdbg
-### hsdbg
-() 
+
+#' Call browser() in Debug Mode
+#' 
+hsdbg <- function() 
 {
   # in general: call "options(error=recover)" to let R enter the debug mode 
   #   on error.
@@ -23,15 +24,17 @@ hsdbg <- function # hsdbg
 }
 
 # hsAttribMatrix ---------------------------------------------------------------
-hsAttribMatrix <- function
-### Converts a vector of attribute strings to a matrix with as many columns as
-### there are different attributes occurring in the vector and each row
-### representing an element of the vector for which the values of assigned
-### attributes will occur in the corresponding attribute column.
-(
-  attribs 
-  ### Vector containing strings of the form "<key1>=<val1>,<key2>=<val2>,..."
-) 
+
+#' Attribute Strings to Matrix
+#' 
+#' Converts a vector of attribute strings to a matrix with as many columns as
+#'   there are different attributes occurring in the vector and each row
+#'   representing an element of the vector for which the values of assigned
+#'   attributes will occur in the corresponding attribute column.
+#' 
+#' @param attribs Vector containing strings of the form "<key1>=<val1>,<key2>=<val2>,..."
+#' 
+hsAttribMatrix <- function(attribs) 
 { 
   ## Split each element of the attribs vector at commas
   assilist <- strsplit(attribs, ",")
@@ -72,12 +75,14 @@ hsAttribMatrix <- function
 }
 
 # hsDirStructure ---------------------------------------------------------------
-hsDirStructure <- function
-### Gets recursively defined directory structure from RMeta.mdb
-(
-  asMatrix = FALSE,
-  dbg = FALSE
-) 
+
+#' Read Directory Structure from Metadata Database
+#' 
+#' Gets recursively defined directory structure from RMeta.mdb
+#' 
+#' @param asMatrix logical indicating whether to return a matrix or not
+#' @param dbg If \code{TRUE}, debug messages are shown  
+hsDirStructure <- function(asMatrix = FALSE, dbg = FALSE) 
 {
   on.exit(options(stringsAsFactors = getOption("stringsAsFactors")))
   options(stringsAsFactors = FALSE)
@@ -95,4 +100,3 @@ hsDirStructure <- function
   }
   ds
 }
-

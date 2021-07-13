@@ -1,20 +1,24 @@
 # hsDataAvailability -----------------------------------------------------------
-hsDataAvailability <- function # data availability in time-series data
-### data availability in time-series data
-(
+
+#' Data Availability in time-series data
+#' 
+#' \code{data} availability in time-series \code{data}
+#' 
+#' @param data \code{data} frame with timestamp in first column
+#' @param tstep expected timestep between consecutive timestamps in seconds. Default:
+#'   minimum time difference occurring in timestamps of \emph{data}.
+#' @param interval length of time intervals to which \code{data} is grouped, in seconds. Default:
+#'   60*60*24 = one day intervals; \code{data} availability is calculated separately
+#'   for each time \code{interval}.
+#' @param includeCount if TRUE, not only the \code{data} availability in percent but also the number
+#'   of records per \code{interval} from which the percentage has been calculated
+#'   are included as separate columns in the result \code{data} frame.
+#' @param dbg If \code{TRUE}, debug messages are shown  
+hsDataAvailability <- function(
   data,
-  ### data frame with timestamp in first column
   tstep = minTimeStep(data[[1]], dbg = dbg),
-  ### expected timestep between consecutive timestamps in seconds. Default:
-  ### minimum time difference occurring in timestamps of \emph{data}.
   interval = 60*60*24, 
-  ### length of time intervals to which data is grouped, in seconds. Default:
-  ### 60*60*24 = one day intervals; data availability is calculated separately
-  ### for each time interval.
   includeCount = TRUE,
-  ### if TRUE, not only the data availability in percent but also the number
-  ### of records per interval from which the percentage has been calculated
-  ### are included as separate columns in the result data frame.
   dbg = FALSE
 ) 
 {  
@@ -44,22 +48,31 @@ hsDataAvailability <- function # data availability in time-series data
 }
 
 # hsDataAvailability.old -------------------------------------------------------
-hsDataAvailability.old <- function # data availability of time series data
-### Data availability of time series data
-(
+
+#' Data availability of time series data
+#' 
+#' @param info list with the named elements (\emph{mdb}: full path to Access database, 
+#'   \emph{tbl}: table name, \emph{tsField}: name of timestamp field, 
+#'   \emph{parField}: name of parameter field)
+#' @param dateFirst Date object representing first date to be considered
+#' @param dateLast Date object representing last date to be considered
+#' @param tstep expected time step between time stamps in seconds. Default: minimum 
+#'   time difference found between consecutive timestamps in given interval
+#' @param dbg If TRUE, debug messages will be shown  
+#' 
+#' @return data.frame with each row representing a day within the specified time
+#'   interval and columns \eqn{intervalBeg} (day), \eqn{n<Par>} 
+#'   (number of non-NA-values in column <Par> within the interval)
+#'   and \eqn{p<Par>} (data availability of parameter <Par> in percent 
+#'   = number of available non-NA-values divided by maximum possible 
+#'   number of non-NA-values per day (= 86400 / \emph{tstep}).  
+#' 
+hsDataAvailability.old <- function(
   info,
-  ### list with the named elements (\emph{mdb}: full path to Access database, 
-  ### \emph{tbl}: table name, \emph{tsField}: name of timestamp field, 
-  ### \emph{parField}: name of parameter field)
   dateFirst = NULL, 
-  ### Date object representing first date to be considered
   dateLast = NULL, 
-  ### Date object representing last date to be considered
   tstep = NULL, 
-  ### expected time step between time stamps in seconds. Default: minimum 
-  ### time difference found between consecutive timestamps in given interval
   dbg = FALSE
-  ### If TRUE, debug messages will be shown  
 )
 {
   # Build the WHERE-clause for an SQL query filtering for non-NA datasets 
@@ -76,7 +89,6 @@ hsDataAvailability.old <- function # data availability of time series data
   
   # Did we get data?
   if (length(res) == 0) {
-    #@2011-12-19: stop instead of "print" and "return"
     stop("The returned recordset is empty.")
   }
   
@@ -101,39 +113,39 @@ hsDataAvailability.old <- function # data availability of time series data
   
   # Return result data frame
   res
-  ### data.frame with each row representing a day within the specified time
-  ### interval and columns \eqn{intervalBeg} (day), \eqn{n<Par>} 
-  ### (number of non-NA-values in column <Par> within the interval)
-  ### and \eqn{p<Par>} (data availability of parameter <Par> in percent 
-  ### = number of available non-NA-values divided by maximum possible 
-  ### number of non-NA-values per day (= 86400 / \emph{tstep}).  
-}                                   
+}
 
 # hsPlotDataAvailability -------------------------------------------------------
+
+#' Plot Data Availability
+#' 
+#' barplot showing data availability in (e.g. daily) time intervals.
+#' 
+#' @param avail data frame containing the availibility information as returned by
+#'   \code{\link{hsDataAvailability}}
+#' @param colNames name of column containing availabilities 
+#' @param firstIntBeg timestamp indicating the begin of the first interval to be plotted
+#' @param lastIntBeg timestamp indicating the begin of the last interval to be plotted
+#' @param main \code{main} title of barplot
+#' @param barCols bar colour(s). If \code{avail} is a list of data frames, each data frame is
+#'   shown in its own colour as given here in \code{barCols}
+#' @param labelStep if set to <n>, only every n-th date label will be shown in the plot
+#' @param firstPlot if TRUE, barplot is replotted, else plot is added to existing plot
+#' @param dbg If \code{TRUE}, debug messages are shown  
+#' @param \dots further arguments to be passed to R's barplot() function.
+#' 
 hsPlotDataAvailability <- function
-### barplot showing data availability in (e.g. daily) time intervals.
 (
   avail, 
-  ### data frame containing the availibility information as returned by
-  ### hsDataAvailability
   colNames = NULL,
-  ### name of column containing availabilities 
   firstIntBeg = NULL,
-  ### timestamp indicating the begin of the first interval to be plotted
   lastIntBeg = NULL,
-  ### timestamp indicating the begin of the last interval to be plotted
   main = "hsPlotDataAvailability",
-  ### main title of barplot
   barCols = NULL,
-  ### bar colour(s). If avail is a list of data frames, each data frame is
-  ### shown in its own colour as given here in barCols
   labelStep = 2, 
-  ### if set to <n>, only every n-th date label will be shown in the plot
   firstPlot = TRUE,
-  ### if TRUE, barplot is replotted, else plot is added to existing plot
   dbg = FALSE,
   ...
-  ### further arguments to be passed to R's barplot() function.
 ) 
 {
   ## avail must be a list of data frames or a data frame
@@ -213,7 +225,6 @@ hsPlotDataAvailability <- function
 
     # Add a legend to the plot...
     # inset=-0.1: 10% of plot height above the plot
-    #@2011-12-19: adapt the legend to the type of the data status
     if (is.null(barCols))
       barCols <- rainbow(length(avail))
     
@@ -290,5 +301,3 @@ hsPlotDataAvailability <- function
   # xpd=FALSE: only show inside plot area
   abline(h = c(0,100), xpd = FALSE, lty = 2) # , col = "darkgrey" 
 }
-
-

@@ -1,27 +1,31 @@
 # defaultDictionary ------------------------------------------------------------
-defaultDictionary <- function # Get Default Dictionary from Meta Database
-### Get a default dictionary from the meta database
-(
-  mdb = mmdb(),
-  ### full path to meta database, default: \code{\link{mmdb}()}
-  dbg = FALSE
-) 
+
+#' Get Default Dictionary from Meta Database
+#' 
+#' Get a default dictionary from the meta database
+#' 
+#' @param mdb full path to meta database, default: \code{\link{mmdb}()}
+#' @param dbg If \code{TRUE}, debug messages are shown  
+defaultDictionary <- function(mdb = mmdb(), dbg = FALSE)
 {
   ## Get key-value table from mdb and transform to dictionary (list)
-  data <- kwb.db::hsGetTable(mdb, tbl = "tblGrammarDir", 
-                             fields = "grdKey,grdValue", dbg = dbg)
+  data <- kwb.db::hsGetTable(
+    mdb, tbl = "tblGrammarDir", fields = "grdKey,grdValue", dbg = dbg
+  )
 
   kwb.utils::toLookupList(data = data)
 }
 
 # hsFileCands ------------------------------------------------------------------
-hsFileCands <- function
-### find file candidates according to paths defined in dictionary
-(
-  mdb, 
-  dict.lst,
-  dbg = FALSE
-) 
+
+#' File Candidates
+#' 
+#' find file candidates according to paths defined in dictionary
+#' 
+#' @param mdb path to MS Access database
+#' @param dict.lst path dictionary (a list)
+#' @param dbg If \code{TRUE}, debug messages are shown  
+hsFileCands <- function(mdb, dict.lst, dbg = FALSE)
 {
   mdb.res <- hsResolve(mdb, dict.lst) # fully resolved path
   dir.name <- dirname(mdb.res)        # directory name
@@ -73,16 +77,18 @@ hsFileCands <- function
 }
 
 # hsSourceList -----------------------------------------------------------------
-hsSourceList <- function
-### Return data frame containing ids, properties and paths of mdb databases
-### matching criteria given in ... argument list
-(
-  keyptrn = "^DB_", 
-  dbg = FALSE, 
-  ...
-) 
-{
 
+#' hsSourceList
+#' 
+#' Return data frame containing ids, properties and paths of mdb databases
+#'   matching criteria given in \code{...} argument list
+#' 
+#' @param keyptrn Pattern matching the keys representing databases. 
+#'   Default: "^DB_"
+#' @param dbg If \code{TRUE}, debug messages are shown
+#' @param \dots definition of filter criteria given as "key = value" pairs
+hsSourceList <- function(keyptrn = "^DB_", dbg = FALSE, ...)
+{
   ## Get definition of grammar
   dict.lst <- c(defaultDictionary(dbg = dbg), list(...))
   
@@ -115,13 +121,15 @@ hsSourceList <- function
 }
 
 # hsMiaDir ---------------------------------------------------------------------
-hsMiaDir <- function
-### Return directory paths containing mdb databases matching the criteria
-### defined by the ... parameter list
-(
-  dbg = FALSE, 
-  ...
-)
+
+#' hsMiaDir
+#' 
+#' Return directory paths containing mdb databases matching the criteria
+#'   defined by the \code{...} parameter list
+#' 
+#' @param dbg If \code{TRUE}, debug messages are shown  
+#' @param \dots assignments of the form "name = value"
+hsMiaDir <- function(dbg = FALSE, ...)
 {
   dirs <- hsSourceList(keyptrn = "^DIR_", dbg = dbg)
 

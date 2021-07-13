@@ -3,6 +3,7 @@
 [![codecov](https://codecov.io/github/KWB-R/kwb.misc/branch/main/graphs/badge.svg)](https://codecov.io/github/KWB-R/kwb.misc)
 [![Project Status](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://www.tidyverse.org/lifecycle/#experimental)
 [![CRAN_Status_Badge](https://www.r-pkg.org/badges/version/kwb.misc)]()
+[![R-Universe_Status_Badge](https://kwb-r.r-universe.dev/badges/kwb.misc)](https://kwb-r.r-universe.dev/)
 
 # kwb.misc
 

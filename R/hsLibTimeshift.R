@@ -6,8 +6,6 @@
 #' plotted in different scales given by "fracts" (fractions of interval length).
 #' The time-series of the water quality parameter at the container, upstream and
 #' downstream are plotted over time as well as the flow.
-#' @2011-11-25: moved to here
-#' @2011-12-13: renamed from hsPlotAll; new parameters
 #' 
 #' @param frmOrig Original time-series 
 #' @param frmUs upstream shifted time-series
@@ -59,6 +57,16 @@ hsAllTimeshiftPlots <- function(
 #' (original, upstream/downstream time-shifted) of one water quality parameter
 #' and for one overflow events \code{i} contained in the event list "evt".
 #' 
+#' @param frmOrig data frame with original measurements
+#' @param frmUs data frame with measurements time-shifted upstream
+#' @param frmDs data frame with measurements time-shifted downstream
+#' @param evt event list
+#' @param fieldNames field names
+#' @param i index
+#' @param evtDurFract event duration fraction
+#' @param type1 plot type, e.g. "p" for "points", passed to \code{\link{plot}}
+#' @param boolOverview should an overview be plotted?
+#' @param fieldPrefix field prefix
 hsTimeshiftPlot <- function(
   frmOrig, 
   frmUs, 
@@ -233,7 +241,7 @@ hsTimeshiftPlot <- function(
 #'   related timestamps.
 #' @param valFactor factor to be applied to column \emph{valField} before
 #'   calculating value sums.
-#' 
+#' @param dbg If \code{TRUE}, debug messages are shown
 hsTimeshift <- function(
   hq,
   threshold,
@@ -380,7 +388,7 @@ hsTimeshift <- function(
 #' @param includeIndices if TRUE, two columns \emph{iStart} and \emph{iStop} are
 #'   included in the output data frame indicating the indices in \emph{tSeries}
 #'   corresponding to the timestamps \emph{tStart} and \emph{tStop}.
-#' 
+#' @param dbg If \code{TRUE}, debug messages are shown  
 #' @return data frame with columns \emph{iStart} and \emph{iStop} being the
 #'   indices of \emph{tSeries} that represent the beginning and the end of the
 #'   time interval in which the value field sums up to at least

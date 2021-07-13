@@ -5,6 +5,8 @@
 #' Lookup name of water quality parameter and return its ID or NA if
 #'   the parameter is not yet contained in the data frame \code{wqpNames}
 #' 
+#' @param parName parameter name
+#' @param wqpNames data frame describing (water quality) parameters
 hsGetParID <- function(parName, wqpNames) 
 {
   # Select dataset 
@@ -22,6 +24,8 @@ hsGetParID <- function(parName, wqpNames)
 #' 
 #' Lookup a water quality parameter defined by (SEN-ID, name, unit) 
 #' 
+#' @param parInfo parameter definition
+#' @param parDefs list of parameter definitions
 #' @return List with two elements \emph{myParID} and \emph{parDefs}.
 #'   If the parameter defined in \emph{parInfo} was found in the list of all 
 #'   parameters \emph{parDefs} that have been found so far, the unique
@@ -54,6 +58,8 @@ hsGetOrCreateParID <- function(parInfo, parDefs)
 #' write table containing all grab sample data in  "all-in-one-table"-format
 #'   to \code{mdb} database
 #' 
+#' @param gsDataList List of grab sample data sets
+#' @param mdb path to MS Access database
 #' @param \dots arguments passed to hsPutTable
 #' 
 hsGsDataListToMdb <- function(gsDataList, mdb, ...)
@@ -93,9 +99,13 @@ hsGsDataListToMdb <- function(gsDataList, mdb, ...)
 #' 
 #' write data \code{block} to database table
 #' 
+#' @param channel database connection
+#' @param block block
+#' @param blockName block name
 #' @param tblNamePtrn name of table to be written in database. @M is replaced with the name 
 #'   of the monitoring point
-#' 
+#' @param boolAsk logical. Ask before tropping existing tables?
+#' @param dbg If \code{TRUE}, debug messages are shown
 hsWriteBlockToTable <- function(
   channel, 
   block, 
@@ -186,17 +196,20 @@ hsWriteBlockToTable <- function(
 #' @param csv full path to \code{csv} file
 #' @param mdb full path to MS Access database (*.mdb)
 #' @param sep separator in \code{csv} file
-#' @param dateFormat date format in \code{csv} file (default: %d/%m/%Y)
-#' @param blockBeginPtrn pattern indicating the begin of a data block in the file 
-#'   (default: Messstelle)
-#' 
+#' @param dateFormat date format in \code{csv} file (default: \%d/\%m/\%Y)
+#' @param blockBeginPtrn pattern indicating the begin of a data block in the
+#'   file (default: Messstelle)
+#' @param tblNamePtrn table name pattern. Default: "tblSenGrabSmp_@@M" with the
+#'   placeholder @@M being replaced with the acronym of the monitoring point
+#' @param boolAsk logical passed to \code{\link{hsWriteBlockToTable}}
+#' @param dbg If \code{TRUE}, debug messages are shown  
 hsImpGsData <- function(
   csv, 
   mdb, 
   sep = ",", 
   dateFormat = underscoreToPercent("_d/_m/_Y"), 
   blockBeginPtrn = "Messstelle", 
-  tblNamePtrn = "tblSenGrabSmp_@M", # @M will be replaced with monitoring point
+  tblNamePtrn = "tblSenGrabSmp_@M",
   boolAsk = TRUE, 
   dbg = FALSE
 ) 
@@ -238,7 +251,12 @@ hsImpGsData <- function(
 #'   water quality parameter (in one column) from table \dQuote{tbl} 
 #'   giving general column names
 #' 
-hsGetSqls <- function(mdb, tbl, mpID, belowAbove = FALSE, bis2007 = FALSE) 
+#' @param mdb path to MS Access database
+#' @param tbl table name
+#' @param mpID monitoring point ID
+#' @param belowAbove Default: FALSE
+#' @param bis2007 Default: FALSE
+hsGetSqls <- function(mdb, tbl, mpID, belowAbove = FALSE, bis2007 = FALSE)
 {
   cat(sprintf("\n\n*** Creating SQL queries for table %s and mpID = %d...\n\n",
               tbl, mpID))

@@ -4,6 +4,11 @@
 #' 
 #' Filter timeseries interactively for \code{interval} or parallel intervals
 #' 
+#' @param tseries data frame containing time series data
+#' @param interval logical. Default: FALSE
+#' @param tsfield Name of column containing the time stamps. Default: name of 
+#'   first column
+#' @param dbg If \code{TRUE}, debug messages are shown  
 hsSel <- function(
   tseries,
   interval = FALSE, 

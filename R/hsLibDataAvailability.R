@@ -13,7 +13,7 @@
 #' @param includeCount if TRUE, not only the \code{data} availability in percent but also the number
 #'   of records per \code{interval} from which the percentage has been calculated
 #'   are included as separate columns in the result \code{data} frame.
-#' 
+#' @param dbg If \code{TRUE}, debug messages are shown  
 hsDataAvailability <- function(
   data,
   tstep = minTimeStep(data[[1]], dbg = dbg),
@@ -89,7 +89,6 @@ hsDataAvailability.old <- function(
   
   # Did we get data?
   if (length(res) == 0) {
-    #@2011-12-19: stop instead of "print" and "return"
     stop("The returned recordset is empty.")
   }
   
@@ -132,6 +131,7 @@ hsDataAvailability.old <- function(
 #'   shown in its own colour as given here in \code{barCols}
 #' @param labelStep if set to <n>, only every n-th date label will be shown in the plot
 #' @param firstPlot if TRUE, barplot is replotted, else plot is added to existing plot
+#' @param dbg If \code{TRUE}, debug messages are shown  
 #' @param \dots further arguments to be passed to R's barplot() function.
 #' 
 hsPlotDataAvailability <- function
@@ -225,7 +225,6 @@ hsPlotDataAvailability <- function
 
     # Add a legend to the plot...
     # inset=-0.1: 10% of plot height above the plot
-    #@2011-12-19: adapt the legend to the type of the data status
     if (is.null(barCols))
       barCols <- rainbow(length(avail))
     

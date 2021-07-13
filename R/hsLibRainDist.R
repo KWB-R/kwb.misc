@@ -14,6 +14,7 @@ if (FALSE)
 
 #' example rain data
 #' 
+#' @param version Number representing version of data to return. Default: 1
 example_rain_data <- function(version = 1)
 {
   if (version == 1) {
@@ -48,6 +49,7 @@ example_rain_data <- function(version = 1)
 #'   and for the columns in which the row contains NA the corresponding powers
 #'   of two are added.
 #' 
+#' @param x data frame or matrix
 na_checksum <- function(x) 
 {
   # Prepare a matrix with as many rows as there are rows in the rain series
@@ -63,6 +65,9 @@ na_checksum <- function(x)
 
 #' Read Rain Data from Database
 #' 
+#' @param myVersion 1 (to read from tbl_Regen_alleEZG_05min) or 2 (to read from
+#'   tbl_Regen_alleEZG_05min)
+#' @param strDb path to MS Access database
 read_rain_from_mdb <- function(myVersion, strDb)
 {
   if (myVersion == 1) {
@@ -85,6 +90,11 @@ read_rain_from_mdb <- function(myVersion, strDb)
 
 #' Prepare Rain Data
 #' 
+#' @param rain rain data
+#' @param myVersion 1 or 2, depending on required output
+#' @param event_sep_time event separation time in seconds
+#' @param signal_width signal width, i.e. time period that a rain data point
+#'   represents, in seconds
 prepare_rain_data <- function(
   rain, myVersion, event_sep_time = 60 * 60 * 6, signal_width = 300
 )
@@ -136,7 +146,7 @@ prepare_rain_data <- function(
 #' @param frmRain data frame containing rain data
 #' @param strTimestamp name of timestamp field, default: "Zeitstempel"
 #' @param strPdf optional. full path to pdf output file
-#' 
+#' @param dbg If \code{TRUE}, debug messages are shown  
 create_and_plot_rain_events <- function(
   frmRain, 
   strTimestamp = "Zeitstempel", 
@@ -309,6 +319,9 @@ plot_given_rain_events <- function(
 
 #' Plot One Rain Event
 #' 
+#' @param frmR data frame containing rain data
+#' @param evt data frame containing event data
+#' @param i index into event data
 plot_one_rain_event <- function(frmR, evt, i)
 {
   ib <- evt$iBeg[i]
@@ -352,13 +365,16 @@ plot_one_rain_event <- function(frmR, evt, i)
 #' 
 #' plot one \code{rain} event by calling \code{\link{plot_one_rain_gauge_event}}
 #' 
+#' @param rain data frame containing rain data
+#' @param rainEventIndex rain event index
 #' @param sigWidth_s \code{rain} signal width in seconds
-#' 
+#' @param boolBarplot logical. Default: \code{TRUE}
+#' @param myCex character expansion factor. Default: 1
+#' @param myMinN minimum total precipitation. Default: 0
 plot_one_rain_event_2 <- function(
   rain,
   rainEventIndex = 1, 
   sigWidth_s = NULL, 
-  ### rain signal width in seconds
   boolBarplot = TRUE,
   myCex = 1, 
   myMinN = 0
@@ -463,9 +479,15 @@ plot_one_rain_event_2 <- function(
 
 #' Plot Rain Event
 #' 
+#' @param rain data frame containing rain data
 #' @param sigWidth_s signal width in seconds
-#' @param Nmax default: 1
-#' 
+#' @param i Default: 2
+#' @param Nmax Default: 1
+#' @param boolLabels plot labels?
+#' @param boolDebug logical
+#' @param myBlue nice blue colour
+#' @param nMaxLabels # max number of labels per page
+#' @param dbg If \code{TRUE}, debug messages are shown
 plot_one_rain_gauge_event <- function(
   rain, 
   sigWidth_s = NULL, 
@@ -473,8 +495,8 @@ plot_one_rain_gauge_event <- function(
   Nmax = 1, 
   boolLabels = FALSE,   
   boolDebug = FALSE, 
-  myBlue = rainbow(8)[6], # nice blue colour
-  nMaxLabels = 60, # max number of labels per page
+  myBlue = rainbow(8)[6],
+  nMaxLabels = 60,
   dbg = FALSE
 ) 
 {
@@ -601,6 +623,13 @@ plot_one_rain_gauge_event <- function(
 #'   \code{maxDate}.
 #'   It is assumed that all but the first columns contain \code{rain} heights!
 #' 
+#' @param rain data frame containing rain data
+#' @param minDate minimum date
+#' @param maxDate maximum date
+#' @param strTimestamp name of timestamp column. Default: "Zeitstempel"
+#' @param boolMaxDateIncluded logical. Should the maximum date be included?
+#' @param Nmax_mm Default: NA
+#' @param cex character expansion factor. Default: 0.9
 plotRainOverview <- function(
   rain, 
   minDate = "", 
@@ -670,6 +699,9 @@ plotRainOverview <- function(
 
 #' Get Rain Stats
 #' 
+#' @param rain data frame containing rain data
+#' @param strTimestamp Name of column containing timestamps. Default: Name of
+#'   first column in \code{rain}
 get_rain_stat <- function(rain, strTimestamp = names(rain)[1])
 {
   stopifnot(is.data.frame(rain), strTimestamp %in% names(rain))
@@ -698,6 +730,11 @@ get_rain_stat <- function(rain, strTimestamp = names(rain)[1])
 
 #' Plot Data Availability
 #' 
+#' @param rainStat rain statistics with one row per rain event
+#' @param n number of rain event
+#' @param main plot title
+#' @param cex character expansion factor. Default: 0.9
+#' @param barColours vector of bar colours
 plotDataAvailability <- function(
   rainStat,
   n = nrow(rainStat),
@@ -738,6 +775,10 @@ plotDataAvailability <- function(
 
 #' Add Value Labels
 #' 
+#' @param x x coordinates
+#' @param y y coordinates
+#' @param labels labels, default: y coordinates
+#' @param cex character expansion factor, default: 0.9
 add_value_labels <- function(x, y, labels = y, cex = 0.9)
 {
   delta_y <- kwb.plot::cmToUserWidthAndHeight(0.1)$height
@@ -752,10 +793,12 @@ add_value_labels <- function(x, y, labels = y, cex = 0.9)
 
 #' Plot Total Precipitation
 #' 
-#' @param rainStat data frame with column \emph{N_mm} and row names indicating rain gauge
-#'   names
+#' @param rainStat data frame with column \emph{N_mm} and row names indicating
+#'   rain gauge names
 #' @param n number of rain series
-#' 
+#' @param main plot title
+#' @param Nmax_mm maximum total precipitation in mm
+#' @param cex character expansion factor. Default: 0.9
 plotTotalPrecipitation <- function(
   rainStat,
   n = nrow(rainStat),
@@ -791,6 +834,9 @@ plotTotalPrecipitation <- function(
 
 #' Plot Rain Subevents by Checksum
 #' 
+#' @param rain data frame containing rain data
+#' @param evt data frame containin rain event data
+#' @param n Default: number of rows in \code{evt}
 plot_rain_subevents_by_checksum <- function(rain, evt, n = nrow(evt)) 
 {
   # For each rain event
@@ -821,6 +867,9 @@ plot_rain_subevents_by_checksum <- function(rain, evt, n = nrow(evt))
 
 #' Plot Rain with Subevent Lines
 #' 
+#' @param rain data frame containing rain data
+#' @param subevt subevent data
+#' @param rainEventIndex rain event index
 plot_rain_with_subevent_lines <- function(rain, subevt, rainEventIndex) 
 {
   n <- ncol(rain) - 2 # without timestamp, checksum
@@ -860,6 +909,10 @@ plot_rain_with_subevent_lines <- function(rain, subevt, rainEventIndex)
 
 #' Plot One Rain Event 3
 #' 
+#' @param frmR data frame containing rain data
+#' @param evt data frame containing rain event data
+#' @param i index
+#' @param myCols vector of colours
 plot_one_rain_event_3 <- function(frmR, evt, i, myCols)
 {
   ib <- evt$evtBeg_i[i]
@@ -898,6 +951,11 @@ plot_one_rain_event_3 <- function(frmR, evt, i, myCols)
 
 #' Plot Rain Events to PDF
 #' 
+#' @param frmR data frame containing rain data
+#' @param evt data frame containing rain event data
+#' @param strPdf path to PDF file
+#' @param myCols vector of colours
+#' @param myVersion Default: 1
 plot_rain_events_to_pdf <- function(
   frmR, evt, strPdf, myCols, myVersion = 1
 ) 

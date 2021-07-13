@@ -9,7 +9,7 @@
 #' @param step timestep in seconds. default: 30
 #' @param ex.avail example data available? default: FALSE
 #' @param dev deviation. default: 0.01
-#' 
+#' @param dbg If \code{TRUE}, debug messages are shown  
 hsExampleCoefData <- function
 (
   nevts = 5, 
@@ -79,6 +79,7 @@ hsEqualUntilPos <- function(combi1, combi2)
 #' 
 #' Generate all possible combinations of elements in \code{x} with order mattering
 #' 
+#' @param x vector of elements of which to create combinations
 hsAllCombis <- function(x) 
 {  
   ## stop condition
@@ -181,9 +182,9 @@ hsAllCoefAnaCombis <- function(n, dbg.level = n)
 
 # hsCombiLinReg ----------------------------------------------------------------
 
-#' hsCombiLinReg
+#' Linear Regression for Event Combination
 #' 
-#' calculation of linear regressions for given combination of events
+#' Calculation of linear regressions for given combination of events
 #' 
 #' @param data \code{data} frame containing columns \emph{tstamp} (time stamp), \emph{pval}
 #'   (probe value), \emph{lval} (lab value), \emph{evtID} (event ID)
@@ -204,7 +205,7 @@ hsAllCoefAnaCombis <- function(n, dbg.level = n)
 #'   \emph{xy} (product of x and y values). Unfortunately, this does not give
 #'   a better performance...
 #' @param calc.rmse if TRUE, the root mean square error (RMSE) is calculated
-#' 
+#' @param dbg If \code{TRUE}, debug messages are shown  
 hsCombiLinReg <- function(
   data,
   combi,
@@ -367,7 +368,8 @@ hsCombiLinReg <- function(
 #' @param aslist default: boolean value given in \emph{recursive}
 #' @param uselm if TRUE, the lm function is used to calculate the linear regression,
 #'   otherwise (\code{uselm} == FALSE) the regression is calculated "manually" 
-#'   which is much faster. default: FALSE
+#'   which is much faster. Default: FALSE
+#' @param prep Default: FALSE
 #' @param \dots further arguments passed to \code{\link{hsCombiLinReg}}, e.g. \emph{clever}
 #' @param dbg.level default: max(2, length(\code{evtNums}) - 8)
 #' 
@@ -427,7 +429,7 @@ hsCoefAna <- function(
 #'   otherwise (\code{uselm} == FALSE) the regression is calculated "manually" 
 #'   which is much faster. default: FALSE
 #' @param \dots further arguments passed to \code{\link{hsCombiLinReg}}, e.g. \emph{clever}
-#' 
+#' @param dbg.level debug level
 #' @return Recursive list representing a \code{tree} structure. At the top level the list
 #'   contains elements \emph{e<i>} where <i> are the event IDs to be considered 
 #'   (elements in \emph{evtNums}).
@@ -546,7 +548,7 @@ hsCoefAnaRec <- function
 #'   columns \emph{np} (number of points), \emph{offset}, \emph{slope},
 #'   \emph{combi}. Default: FALSE.
 #' @param \dots further arguments passed to \code{\link{hsCombiLinReg}}, e.g. \emph{clever}
-#' 
+#' @param dbg.level debug level
 hsCoefAnaNonRec <- function(
   data, uselm = FALSE, aslist = FALSE, ..., dbg.level = 1
 )
@@ -601,7 +603,7 @@ hsCoefAnaNonRec <- function(
 #' @param data \code{data} frame containing columns \emph{tstamp} (time stamp), \emph{pval}
 #'   (probe value), \emph{lval} (lab value), \emph{evtID} (event ID)
 #' @param res result tree as returned by \code{\link{hsCoefAna}}.
-#' 
+#' @param recursive Default: FALSE
 hsPlotCoefAnaRes <- function(data, res, recursive = FALSE)
 {
   col.all  <- "lightgrey"
@@ -708,6 +710,8 @@ hsPlotCoefAnaRes2 <- function(data, res, olim = NULL, slim = NULL)
 #' Browse through result \code{tree} of regression coefficient analysis and "rbind"
 #'   data frames \emph{linreg}
 #' 
+#' @param tree list representing a \code{tree} structure as returned by \code{\link{hsCoefAna}}
+#' @param combilen length of combinations. Default: -1
 hsBrowseCoefAnaRes <- function(tree, combilen = -1)
 {
   if (combilen == -1) {
@@ -742,7 +746,7 @@ hsBrowseCoefAnaRes <- function(tree, combilen = -1)
 #'   data frames \emph{linreg}
 #' 
 #' @param reslist result list as returned by hsCoefAna(..., recursive = FALSE, aslist = TRUE))
-#' 
+#' @param dbg.level debug level
 hsBrowseCoefAnaResList <- function(reslist, dbg.level = 10) 
 { 
   # set option "stringsAsFactors" to FALSE
@@ -769,12 +773,12 @@ hsBrowseCoefAnaResList <- function(reslist, dbg.level = 10)
 
 # hsBrowseCombis ---------------------------------------------------------------
 
-#' hsBrowseCombis
+#' Browse Combinations
 #' 
 #' browses through result \code{tree} and collects all combinations
 #' 
 #' @param tree list representing a \code{tree} structure as returned by \code{\link{hsCoefAna}}
-#' 
+#' @param combis List of combinations. Default: \code{list()}
 #' @return list with first element containing matrix of combinations of length 1, 
 #'   second element containing matrix of combinations of length 2, and so on.
 #' 

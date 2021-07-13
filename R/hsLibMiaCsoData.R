@@ -2,6 +2,7 @@
 
 #' Path to Metadata Database
 #' 
+#' @param id id of record. Currently, only 0 allowed (the default)
 mmdb <- function(id = 0) 
 {
   # Path to R meta database
@@ -79,6 +80,8 @@ hsAttribMatrix <- function(attribs)
 #' 
 #' Gets recursively defined directory structure from RMeta.mdb
 #' 
+#' @param asMatrix logical indicating whether to return a matrix or not
+#' @param dbg If \code{TRUE}, debug messages are shown  
 hsDirStructure <- function(asMatrix = FALSE, dbg = FALSE) 
 {
   on.exit(options(stringsAsFactors = getOption("stringsAsFactors")))

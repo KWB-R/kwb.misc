@@ -7,12 +7,13 @@
 #' @param to.pdf if TRUE, graphical output is written to a pdf file
 #' 
 #' @examples 
-#'   # get names of all installed KWB-packages
-#'   kwb.packages <- grep("^kwb\\\\.", library()$results[, "Package"], value = TRUE)
+#' # Show names of all installed KWB-packages
+#' grep("^kwb\\.", library()$results[, "Package"], value = TRUE)
 #'   
-#'   # document the first package found
-#'   documentPackageFunctionDependencies(kwb.packages[1])      
-#'   
+#' # Document one of the installed packages
+#' \dontrun{
+#' documentPackageFunctionDependencies("kwb.plot")
+#' }
 documentPackageFunctionDependencies <- function(packagenames, to.pdf = FALSE)
 {  
   for(packagename in packagenames) {
@@ -120,6 +121,8 @@ hsPrintToPlot <- function
 #' Creates UNION-queries of given SQL queries, respecting the maximum number
 #'   of subqueries to be used in one and the same UNION query.
 #' 
+#' @param sqls vector of SQL statements
+#' @param maxUnions number of maximum UNIONs allowed
 #' @return vector of UNION queries
 #' 
 hsUnionSqls <- function(sqls, maxUnions) 
@@ -152,10 +155,12 @@ hsUnionSqls <- function(sqls, maxUnions)
 
 # hsDropExistingTable ----------------------------------------------------------
 
-#' hsDropExistingTable
+#' Drop an existing table (user interaction)
 #' 
-#' drop an existing table (user interaction)
-#' 
+#' @param channel database connection
+#' @param strTable table name
+#' @param boolAsk logical indication whether the user should be asked before 
+#'   dropping the table
 #' @return table name of created table. 
 #' 
 hsDropExistingTable <- function(channel, strTable, boolAsk = TRUE)
@@ -163,9 +168,6 @@ hsDropExistingTable <- function(channel, strTable, boolAsk = TRUE)
   newName <- strTable
   
   # Does the database contain a table of that name?
-  
-  #@2011-12-19: use %in% instead of hsContains!
-  #if (hsContains(sqlTables(channel)$TABLE_NAME, strTable)) {
   if (strTable %in% sqlTables(channel)$TABLE_NAME) {
     
     # Shall the user decide?

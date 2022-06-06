@@ -31,16 +31,16 @@ hsCalibAna <- function (
   ## Prepare the result structure
   res <- list()
   
-  for (n in 1:N) {
+  for (n in seq_len(N)) {
     
     if (dbg) cat("Taking into account", n, "out of", N, "events...\n")
     
     ## build combinations of n events 
-    combis <- combn(1:N, n)
+    combis <- combn(seq_len(N), n)
 
     ## Inner loop: all possible combinations of n events to be taken from all
     ## available events
-    for (i in 1:ncol(combis)) {
+    for (i in seq_len(ncol(combis))) {
       ntot <- ntot + 1
       combi <- combis[, i]
       if (dbg) cat("Combi", i, ":", paste(combi, collapse = ", "), "...\n")
@@ -441,11 +441,11 @@ hsPlotEventOverview <- function(
   par(ask = FALSE, oma = c(1,1,1,1), mar = c(5,4,4,12), xpd = TRUE)
   
   ## Loop through events by row index in data frame <evts>
-  for (i in 1:ne) {
+  for (i in seq_len(ne)) {
     #evtDat <- dat[evts$iBeg[i]:evts$iEnd[i], , drop = FALSE]
 
     #@2012-01-20 Select rows by time interval not by index
-    rowinds <- (1:nrow(dat))[(dat[[1]] >= evts$tBeg[i]) & (dat[[1]] <= evts$tEnd[i])]
+    rowinds <- (seq_len(nrow(dat)))[(dat[[1]] >= evts$tBeg[i]) & (dat[[1]] <= evts$tEnd[i])]
     if (length(rowinds) < 1) {
       cat(sprintf("\n*** No data for event #%d (%s - %s) found.\n\n", 
           i, evts$tBeg[i], evts$tEnd[i]))

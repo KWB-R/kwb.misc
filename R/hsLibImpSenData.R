@@ -75,7 +75,7 @@ hsGsDataListToMdb <- function(gsDataList, mdb, ...)
   hsPutTable(
     mdb = mdb, 
     myData = data.frame(
-      wqp2ID = seq_len(length(lParNames)),
+      wqp2ID = seq_along(lParNames),
       wqp2Name = lParNames
     ), 
     tbl = "tblWqPar",
@@ -131,7 +131,7 @@ hsWriteBlockToTable <- function(
   # Number of sub-tables to be created
   nSubTables <- as.integer( (ncol(block)-2) / nMaxDataCol) + 1
   
-  for (i in 1:nSubTables) {  
+  for (i in seq_len(nSubTables)) {  
     
     # Generate a table name
     #tbl <- paste("tblSenGrabSmp", blockName, sep = "_")

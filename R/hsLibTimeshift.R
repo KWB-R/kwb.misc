@@ -173,13 +173,13 @@ hsTimeshiftPlot <- function(
     axis(1, at = tseq, labels = format(tseq, "%Y-%m-%d %H:%M"))
     
 	if (boolOverview) {
-		idus <- 1:nrow(frmUs)
-		idds <- 1:nrow(frmDs)
+		idus <- seq_len(nrow(frmUs))
+		idds <- seq_len(nrow(frmDs))
 	}
 	else {
 		# Indices in us/ds data corresponding to this event
-		idus <- c(1:nrow(frmUs))[frmUs[[strTsUsDs]] >= tsb & frmUs[[strTsUsDs]] <= tse]
-		idds <- c(1:nrow(frmDs))[frmDs[[strTsUsDs]] >= tsb & frmDs[[strTsUsDs]] <= tse]
+		idus <- c(seq_len(nrow(frmUs)))[frmUs[[strTsUsDs]] >= tsb & frmUs[[strTsUsDs]] <= tse]
+		idds <- c(seq_len(nrow(frmDs)))[frmDs[[strTsUsDs]] >= tsb & frmDs[[strTsUsDs]] <= tse]
 	}
 
 	# Add upstream time-series of wq parameter in blue
@@ -348,7 +348,7 @@ hsTimeshift <- function(
     bsel <- thhr & (is.na(ia[rng] | csum < sumSoFar[rng]))
     sumSoFar[rng[bsel]] <- csum[bsel]
     idx <- rng[bsel]
-    ia[idx] <- (1:n)[idx - i]
+    ia[idx] <- seq_len(n)[idx - i]
   }
   cat("\n")
   tassign <- x[ia, 1]

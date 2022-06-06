@@ -47,7 +47,7 @@ hsExampleCoefData <- function
     dat$lval <- dat$pval * (1 + dev) * rnorm(nr)
     
     ## Append event information
-    dat$evtID <- sort(rep(1:nevts, length.out = nr))      
+    dat$evtID <- sort(rep(seq_len(nevts), length.out = nr))      
   }
 
   if (dbg) {
@@ -90,8 +90,8 @@ hsAllCombis <- function(x)
   for (e in x) {
     res <- rbind(res, cbind(e, hsAllCombis(setdiff(x, e))))
   }
-  colnames(res) <- paste("pos", 1:ncol(res), sep = "")
-  rownames(res) <- paste("combi", 1:nrow(res), sep = "")
+  colnames(res) <- paste("pos", seq_len(ncol(res)), sep = "")
+  rownames(res) <- paste("combi", seq_len(nrow(res)), sep = "")
   res
 }
 
@@ -119,7 +119,7 @@ hsNextCoefAnaCombi <- function(combi, n)
   ## if the combination has not yet the maximum length append the smallest
   ## element that is not yet contained in the current combination
   else if (l < n && all(c(combi, NA) > c(NA, combi), na.rm = TRUE)) {
-    nextCombi <- c(combi, setdiff(1:n, combi)[1])
+    nextCombi <- c(combi, setdiff(seq_len(n), combi)[1])
   } 
   else {
     
@@ -131,11 +131,11 @@ hsNextCoefAnaCombi <- function(combi, n)
     ## and for the possible numbers (candidates cand) to be placed at this
     ## position 
     while (p >= 1 && length(cand) == 0) {
-      cand <- 1:n
+      cand <- seq_len(n)
       
       ## numbers at previous positions are not allowed as candidates
       if (p > 1) {
-        cand <- setdiff(cand, combi[1:(p-1)])
+        cand <- setdiff(cand, combi[seq_len(p-1)])
       }
       
       ## number must be greater than the number at current position in the
@@ -148,7 +148,7 @@ hsNextCoefAnaCombi <- function(combi, n)
     ## position for which the candidates were found with the first candidate
     if (length(cand) > 0) {
       combi[p + 1] <- cand[1]
-      nextCombi <- combi[1:(p+1)]
+      nextCombi <- combi[seq_len(p+1)]
     } 
   }
   return(nextCombi)
@@ -190,7 +190,7 @@ hsAllCoefAnaCombis <- function(n, dbg.level = n)
 #'   (probe value), \emph{lval} (lab value), \emph{evtID} (event ID)
 #' @param combi combination of events for which linear regressions are to be calculated
 #'   in the following way: the first event numbers in \code{combi}, at positions 
-#'   1:(length(\code{combi}) - 1), are considered to be "base" events, i.e. events
+#'   \code{seq_len(length(combi) - 1)}, are considered to be "base" events, i.e. events
 #'   of which all \code{data} points are considered for the linear regression.  
 #'   The \code{data} points belonging to the event given at the last position
 #'   of \code{combi} are added "point by point" to these "base points" and each time

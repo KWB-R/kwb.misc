@@ -227,12 +227,16 @@ hsSelectParallelTimeIntervals <- function(tseries, tsfield = names(tseries)[1])
   num.options <- length(options)
   if (interval) {
     eol <- .getSpaceOrEndOfLineAsWordDelimiters(num.options)
-    choice <- paste0(sprintf("%3d", 1:num.options), ": ", 
+    choice <- paste0(sprintf("%3d", seq_len(num.options)), ": ", 
                      options, ",", eol, collapse = "")
   }
   else {
-    choice <- paste0(c(1:num.options, "RET"), ":", c(options, 
-                                                     "all"), collapse = ",")
+    choice <- paste0(
+      c(seq_len(num.options), "RET"), 
+      ":", 
+      c(options, "all"), 
+      collapse = ","
+    )
   }
   return(choice)
 }

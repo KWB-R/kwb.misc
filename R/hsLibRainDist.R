@@ -29,9 +29,10 @@ example_rain_data <- function(version = 1)
     n2 <- sample(n, 1)
     n3 <- sample(n, 1)
     
-    rain$a[sample(1:n, n1)] <- 0.1 * sample(1:5, n1, replace = T)
-    rain$b[sample(1:n, n2)] <- 0.1 * sample(1:5, n2, replace = T)
-    rain$c[sample(1:n, n3)] <- 0.1 * sample(1:5, n3, replace = T)
+    indices <- seq_len(n)
+    rain$a[sample(indices, n1)] <- 0.1 * sample(1:5, n1, replace = T)
+    rain$b[sample(indices, n2)] <- 0.1 * sample(1:5, n2, replace = T)
+    rain$c[sample(indices, n3)] <- 0.1 * sample(1:5, n3, replace = T)
     
     rain
   } else if (version == 2) {
@@ -598,7 +599,7 @@ plot_one_rain_gauge_event <- function(
     cat("N:", N, ", I will show every", n_th, "-th label.\n")
 
     # Calculate indices of labels to be shown by modulo division
-    # idx <- (1:N)[(1:N) %% n_th == 0]
+    # idx <- (seq_len(N))[seq_len(N) %% n_th == 0]
     idx <- seq_len(N)[as.integer(tAll) %% (n_th * sigWidth_s) == 0]
 
     # Put the timestamp labels

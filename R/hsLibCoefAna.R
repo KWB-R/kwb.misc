@@ -652,7 +652,7 @@ hsPlotCoefAnaRes <- function(data, res, recursive = FALSE)
                               paste("#", res$combi[-lc], 
                                     sep = "", collapse = ", ")), 
                       sprintf("p%d of new event (#%d)", 
-                              1:length(rbcols), 
+                              seq_along(rbcols), 
                               res$combi[lc])))    
   }
   

@@ -1,237 +1,237 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>/404.html</loc>
+    <loc>https://kwb-r.github.io/kwb.misc/404.html</loc>
   </url>
   <url>
-    <loc>/LICENSE-text.html</loc>
+    <loc>https://kwb-r.github.io/kwb.misc/LICENSE-text.html</loc>
   </url>
   <url>
-    <loc>/LICENSE.html</loc>
+    <loc>https://kwb-r.github.io/kwb.misc/LICENSE.html</loc>
   </url>
   <url>
-    <loc>/authors.html</loc>
+    <loc>https://kwb-r.github.io/kwb.misc/authors.html</loc>
   </url>
   <url>
-    <loc>/index.html</loc>
+    <loc>https://kwb-r.github.io/kwb.misc/index.html</loc>
   </url>
   <url>
-    <loc>/news/index.html</loc>
+    <loc>https://kwb-r.github.io/kwb.misc/news/index.html</loc>
   </url>
   <url>
-    <loc>/reference/add_value_labels.html</loc>
+    <loc>https://kwb-r.github.io/kwb.misc/reference/add_value_labels.html</loc>
   </url>
   <url>
-    <loc>/reference/create_and_plot_rain_events.html</loc>
+    <loc>https://kwb-r.github.io/kwb.misc/reference/create_and_plot_rain_events.html</loc>
   </url>
   <url>
-    <loc>/reference/defaultDictionary.html</loc>
+    <loc>https://kwb-r.github.io/kwb.misc/reference/defaultDictionary.html</loc>
   </url>
   <url>
-    <loc>/reference/documentPackageFunctionDependencies.html</loc>
+    <loc>https://kwb-r.github.io/kwb.misc/reference/documentPackageFunctionDependencies.html</loc>
   </url>
   <url>
-    <loc>/reference/example_rain_data.html</loc>
+    <loc>https://kwb-r.github.io/kwb.misc/reference/example_rain_data.html</loc>
   </url>
   <url>
-    <loc>/reference/get_rain_stat.html</loc>
+    <loc>https://kwb-r.github.io/kwb.misc/reference/get_rain_stat.html</loc>
   </url>
   <url>
-    <loc>/reference/hsAllCoefAnaCombis.html</loc>
+    <loc>https://kwb-r.github.io/kwb.misc/reference/hsAllCoefAnaCombis.html</loc>
   </url>
   <url>
-    <loc>/reference/hsAllCombis.html</loc>
+    <loc>https://kwb-r.github.io/kwb.misc/reference/hsAllCombis.html</loc>
   </url>
   <url>
-    <loc>/reference/hsAllTimeshiftPlots.html</loc>
+    <loc>https://kwb-r.github.io/kwb.misc/reference/hsAllTimeshiftPlots.html</loc>
   </url>
   <url>
-    <loc>/reference/hsAttribMatrix.html</loc>
+    <loc>https://kwb-r.github.io/kwb.misc/reference/hsAttribMatrix.html</loc>
   </url>
   <url>
-    <loc>/reference/hsAvailCalibs.html</loc>
+    <loc>https://kwb-r.github.io/kwb.misc/reference/hsAvailCalibs.html</loc>
   </url>
   <url>
-    <loc>/reference/hsBrowseCoefAnaRes.html</loc>
+    <loc>https://kwb-r.github.io/kwb.misc/reference/hsBrowseCoefAnaRes.html</loc>
   </url>
   <url>
-    <loc>/reference/hsBrowseCoefAnaResList.html</loc>
+    <loc>https://kwb-r.github.io/kwb.misc/reference/hsBrowseCoefAnaResList.html</loc>
   </url>
   <url>
-    <loc>/reference/hsBrowseCombis.html</loc>
+    <loc>https://kwb-r.github.io/kwb.misc/reference/hsBrowseCombis.html</loc>
   </url>
   <url>
-    <loc>/reference/hsCalibAna.html</loc>
+    <loc>https://kwb-r.github.io/kwb.misc/reference/hsCalibAna.html</loc>
   </url>
   <url>
-    <loc>/reference/hsCoefAna.html</loc>
+    <loc>https://kwb-r.github.io/kwb.misc/reference/hsCoefAna.html</loc>
   </url>
   <url>
-    <loc>/reference/hsCoefAnaNonRec.html</loc>
+    <loc>https://kwb-r.github.io/kwb.misc/reference/hsCoefAnaNonRec.html</loc>
   </url>
   <url>
-    <loc>/reference/hsCoefAnaRec.html</loc>
+    <loc>https://kwb-r.github.io/kwb.misc/reference/hsCoefAnaRec.html</loc>
   </url>
   <url>
-    <loc>/reference/hsCombiLinReg.html</loc>
+    <loc>https://kwb-r.github.io/kwb.misc/reference/hsCombiLinReg.html</loc>
   </url>
   <url>
-    <loc>/reference/hsCurCal.html</loc>
+    <loc>https://kwb-r.github.io/kwb.misc/reference/hsCurCal.html</loc>
   </url>
   <url>
-    <loc>/reference/hsDataAvailability.html</loc>
+    <loc>https://kwb-r.github.io/kwb.misc/reference/hsDataAvailability.html</loc>
   </url>
   <url>
-    <loc>/reference/hsDataAvailability.old.html</loc>
+    <loc>https://kwb-r.github.io/kwb.misc/reference/hsDataAvailability.old.html</loc>
   </url>
   <url>
-    <loc>/reference/hsDirStructure.html</loc>
+    <loc>https://kwb-r.github.io/kwb.misc/reference/hsDirStructure.html</loc>
   </url>
   <url>
-    <loc>/reference/hsDropExistingTable.html</loc>
+    <loc>https://kwb-r.github.io/kwb.misc/reference/hsDropExistingTable.html</loc>
   </url>
   <url>
-    <loc>/reference/hsEqualUntilPos.html</loc>
+    <loc>https://kwb-r.github.io/kwb.misc/reference/hsEqualUntilPos.html</loc>
   </url>
   <url>
-    <loc>/reference/hsExampleCoefData.html</loc>
+    <loc>https://kwb-r.github.io/kwb.misc/reference/hsExampleCoefData.html</loc>
   </url>
   <url>
-    <loc>/reference/hsFileCands.html</loc>
+    <loc>https://kwb-r.github.io/kwb.misc/reference/hsFileCands.html</loc>
   </url>
   <url>
-    <loc>/reference/hsGetOrCreateParID.html</loc>
+    <loc>https://kwb-r.github.io/kwb.misc/reference/hsGetOrCreateParID.html</loc>
   </url>
   <url>
-    <loc>/reference/hsGetParID.html</loc>
+    <loc>https://kwb-r.github.io/kwb.misc/reference/hsGetParID.html</loc>
   </url>
   <url>
-    <loc>/reference/hsGetSqls.html</loc>
+    <loc>https://kwb-r.github.io/kwb.misc/reference/hsGetSqls.html</loc>
   </url>
   <url>
-    <loc>/reference/hsGsDataListToMdb.html</loc>
+    <loc>https://kwb-r.github.io/kwb.misc/reference/hsGsDataListToMdb.html</loc>
   </url>
   <url>
-    <loc>/reference/hsImpGsData.html</loc>
+    <loc>https://kwb-r.github.io/kwb.misc/reference/hsImpGsData.html</loc>
   </url>
   <url>
-    <loc>/reference/hsIntSumGeThreshold.html</loc>
+    <loc>https://kwb-r.github.io/kwb.misc/reference/hsIntSumGeThreshold.html</loc>
   </url>
   <url>
-    <loc>/reference/hsMergeAvailCalibs.html</loc>
+    <loc>https://kwb-r.github.io/kwb.misc/reference/hsMergeAvailCalibs.html</loc>
   </url>
   <url>
-    <loc>/reference/hsMiaDir.html</loc>
+    <loc>https://kwb-r.github.io/kwb.misc/reference/hsMiaDir.html</loc>
   </url>
   <url>
-    <loc>/reference/hsNextCoefAnaCombi.html</loc>
+    <loc>https://kwb-r.github.io/kwb.misc/reference/hsNextCoefAnaCombi.html</loc>
   </url>
   <url>
-    <loc>/reference/hsPlotCalOverview.html</loc>
+    <loc>https://kwb-r.github.io/kwb.misc/reference/hsPlotCalOverview.html</loc>
   </url>
   <url>
-    <loc>/reference/hsPlotCoefAnaRes.html</loc>
+    <loc>https://kwb-r.github.io/kwb.misc/reference/hsPlotCoefAnaRes.html</loc>
   </url>
   <url>
-    <loc>/reference/hsPlotCoefAnaRes2.html</loc>
+    <loc>https://kwb-r.github.io/kwb.misc/reference/hsPlotCoefAnaRes2.html</loc>
   </url>
   <url>
-    <loc>/reference/hsPlotDataAvailability.html</loc>
+    <loc>https://kwb-r.github.io/kwb.misc/reference/hsPlotDataAvailability.html</loc>
   </url>
   <url>
-    <loc>/reference/hsPlotEventOverview.html</loc>
+    <loc>https://kwb-r.github.io/kwb.misc/reference/hsPlotEventOverview.html</loc>
   </url>
   <url>
-    <loc>/reference/hsPrintToPlot.html</loc>
+    <loc>https://kwb-r.github.io/kwb.misc/reference/hsPrintToPlot.html</loc>
   </url>
   <url>
-    <loc>/reference/hsSel.html</loc>
+    <loc>https://kwb-r.github.io/kwb.misc/reference/hsSel.html</loc>
   </url>
   <url>
-    <loc>/reference/hsSelectParallelTimeIntervals.html</loc>
+    <loc>https://kwb-r.github.io/kwb.misc/reference/hsSelectParallelTimeIntervals.html</loc>
   </url>
   <url>
-    <loc>/reference/hsSelectTimeInterval.html</loc>
+    <loc>https://kwb-r.github.io/kwb.misc/reference/hsSelectTimeInterval.html</loc>
   </url>
   <url>
-    <loc>/reference/hsSourceList.html</loc>
+    <loc>https://kwb-r.github.io/kwb.misc/reference/hsSourceList.html</loc>
   </url>
   <url>
-    <loc>/reference/hsSpecCal.html</loc>
+    <loc>https://kwb-r.github.io/kwb.misc/reference/hsSpecCal.html</loc>
   </url>
   <url>
-    <loc>/reference/hsSqlExCal.html</loc>
+    <loc>https://kwb-r.github.io/kwb.misc/reference/hsSqlExCal.html</loc>
   </url>
   <url>
-    <loc>/reference/hsTestCombi.html</loc>
+    <loc>https://kwb-r.github.io/kwb.misc/reference/hsTestCombi.html</loc>
   </url>
   <url>
-    <loc>/reference/hsTimeshift.html</loc>
+    <loc>https://kwb-r.github.io/kwb.misc/reference/hsTimeshift.html</loc>
   </url>
   <url>
-    <loc>/reference/hsTimeshiftPlot.html</loc>
+    <loc>https://kwb-r.github.io/kwb.misc/reference/hsTimeshiftPlot.html</loc>
   </url>
   <url>
-    <loc>/reference/hsUnionSqls.html</loc>
+    <loc>https://kwb-r.github.io/kwb.misc/reference/hsUnionSqls.html</loc>
   </url>
   <url>
-    <loc>/reference/hsWriteBlockToTable.html</loc>
+    <loc>https://kwb-r.github.io/kwb.misc/reference/hsWriteBlockToTable.html</loc>
   </url>
   <url>
-    <loc>/reference/hsdbg.html</loc>
+    <loc>https://kwb-r.github.io/kwb.misc/reference/hsdbg.html</loc>
   </url>
   <url>
-    <loc>/reference/index.html</loc>
+    <loc>https://kwb-r.github.io/kwb.misc/reference/index.html</loc>
   </url>
   <url>
-    <loc>/reference/mmdb.html</loc>
+    <loc>https://kwb-r.github.io/kwb.misc/reference/mmdb.html</loc>
   </url>
   <url>
-    <loc>/reference/na_checksum.html</loc>
+    <loc>https://kwb-r.github.io/kwb.misc/reference/na_checksum.html</loc>
   </url>
   <url>
-    <loc>/reference/pageAndPlot.html</loc>
+    <loc>https://kwb-r.github.io/kwb.misc/reference/pageAndPlot.html</loc>
   </url>
   <url>
-    <loc>/reference/plotDataAvailability.html</loc>
+    <loc>https://kwb-r.github.io/kwb.misc/reference/plotDataAvailability.html</loc>
   </url>
   <url>
-    <loc>/reference/plotRainOverview.html</loc>
+    <loc>https://kwb-r.github.io/kwb.misc/reference/plotRainOverview.html</loc>
   </url>
   <url>
-    <loc>/reference/plotTotalPrecipitation.html</loc>
+    <loc>https://kwb-r.github.io/kwb.misc/reference/plotTotalPrecipitation.html</loc>
   </url>
   <url>
-    <loc>/reference/plot_given_rain_events.html</loc>
+    <loc>https://kwb-r.github.io/kwb.misc/reference/plot_given_rain_events.html</loc>
   </url>
   <url>
-    <loc>/reference/plot_one_rain_event.html</loc>
+    <loc>https://kwb-r.github.io/kwb.misc/reference/plot_one_rain_event.html</loc>
   </url>
   <url>
-    <loc>/reference/plot_one_rain_event_2.html</loc>
+    <loc>https://kwb-r.github.io/kwb.misc/reference/plot_one_rain_event_2.html</loc>
   </url>
   <url>
-    <loc>/reference/plot_one_rain_event_3.html</loc>
+    <loc>https://kwb-r.github.io/kwb.misc/reference/plot_one_rain_event_3.html</loc>
   </url>
   <url>
-    <loc>/reference/plot_one_rain_gauge_event.html</loc>
+    <loc>https://kwb-r.github.io/kwb.misc/reference/plot_one_rain_gauge_event.html</loc>
   </url>
   <url>
-    <loc>/reference/plot_rain_events.html</loc>
+    <loc>https://kwb-r.github.io/kwb.misc/reference/plot_rain_events.html</loc>
   </url>
   <url>
-    <loc>/reference/plot_rain_events_to_pdf.html</loc>
+    <loc>https://kwb-r.github.io/kwb.misc/reference/plot_rain_events_to_pdf.html</loc>
   </url>
   <url>
-    <loc>/reference/plot_rain_subevents_by_checksum.html</loc>
+    <loc>https://kwb-r.github.io/kwb.misc/reference/plot_rain_subevents_by_checksum.html</loc>
   </url>
   <url>
-    <loc>/reference/plot_rain_with_subevent_lines.html</loc>
+    <loc>https://kwb-r.github.io/kwb.misc/reference/plot_rain_with_subevent_lines.html</loc>
   </url>
   <url>
-    <loc>/reference/prepare_rain_data.html</loc>
+    <loc>https://kwb-r.github.io/kwb.misc/reference/prepare_rain_data.html</loc>
   </url>
   <url>
-    <loc>/reference/read_rain_from_mdb.html</loc>
+    <loc>https://kwb-r.github.io/kwb.misc/reference/read_rain_from_mdb.html</loc>
   </url>
 </urlset>

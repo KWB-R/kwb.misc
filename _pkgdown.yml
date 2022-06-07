@@ -1,15 +1,27 @@
+url: https://kwb-r.github.io/kwb.misc
 authors:
-  Hauke Sonnenberg:
+  Hauke Sonnenberg: 
     href: https://github.com/hsonne
   Michael Rustler:
     href: https://mrustl.de
+  MIA-CSO:
+    href: https://www.kompetenz-wasser.de/en/project/mia-cso/
+    html: <img src='https://kompetenzwasser.de/media/pages/forschung/projekte/mia-cso/1d4ce40f52-1639132760/mia-cso.png'
+      width='72' />
   Kompetenzzentrum Wasser Berlin gGmbH (KWB):
-    href: http://www.kompetenz-wasser.de
-    html: <img src='http://www.kompetenz-wasser.de/wp-content/uploads/2017/08/cropped-logo-kwb_klein-new.png'
-      height='24' />
+    href: https://www.kompetenz-wasser.de
+    html: <img src='https://publications.kompetenz-wasser.de/img/KWB-Logo.svg' alt='KWB'
+      width='72' />
 template:
-  params:
-    bootswatch: cerulean
+  bootstrap: 5
+  bootswatch: cerulean
+  bslib:
+    bg: '#ffffff'
+    fg: '#000000'
+    primary: '#007aff'
+    border-radius: 0.5rem
+    btn-border-radius: 0.25rem
 development:
   mode: auto
+
 

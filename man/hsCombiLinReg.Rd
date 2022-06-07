@@ -20,7 +20,7 @@ hsCombiLinReg(
 
 \item{combi}{combination of events for which linear regressions are to be calculated
 in the following way: the first event numbers in \code{combi}, at positions 
-1:(length(\code{combi}) - 1), are considered to be "base" events, i.e. events
+\code{seq_len(length(combi) - 1)}, are considered to be "base" events, i.e. events
 of which all \code{data} points are considered for the linear regression.  
 The \code{data} points belonging to the event given at the last position
 of \code{combi} are added "point by point" to these "base points" and each time

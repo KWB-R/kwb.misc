@@ -41,13 +41,13 @@ hsAttribMatrix <- function(attribs)
   
   ## Generate vector of unique assignments
   assigns <- character()
-  #for (i in 1:length(assilist)) assigns <- union(assigns, assilist[[i]])
+  #for (i in seq_along(assilist)) assigns <- union(assigns, assilist[[i]])
   for (assi in assilist) assigns <- union(assigns, assi)
   
   ## Split assignments at the equal sign and collect all different key names
   kvlist <- strsplit(assigns, "=")
   keys <- character()
-  #for (i in 1:length(kvlist)) keys <- union(keys, kvlist[[i]][1])
+  #for (i in seq_along(kvlist)) keys <- union(keys, kvlist[[i]][1])
   for (kv in kvlist) keys <- union(keys, kv[1])
   
   ## Prepare a matrix with the keys as colum names
@@ -55,7 +55,7 @@ hsAttribMatrix <- function(attribs)
     dimnames = list(NULL, c(keys)))
 
   ## Loop through original list elements again and fill the result matrix
-  for (i in 1:length(assilist)) {
+  for (i in seq_along(assilist)) {
 
     ## Loop through assignments
     for (assi in assilist[[i]]) {

@@ -274,7 +274,8 @@ hsCurCal <- function(
 ) 
 {
   if (is.null(mdbCal))
-    mdbCal <- "\\\\moby/miacso$/Daten/ACCESS/KwbMonitoring/3CAL/KWB_CAL.mdb"
+    mdbCal <- sprintf("\\\\%s/miacso$/Daten/ACCESS/KwbMonitoring/3CAL/KWB_CAL.mdb",
+                      get_servername())
   
   ## Build query name
   qry <- sprintf("qry_%s_CAL_%s", moniPoint, parAcronym)
@@ -308,7 +309,8 @@ hsSpecCal <- function(moniPoint, parAcronym, calName = NULL, mdbCal = NULL)
   on.exit(Sys.setenv(tz = tzone))
 
   if (is.null(mdbCal))
-    mdbCal <- "\\\\moby/miacso$/Daten/ACCESS/KwbMonitoring/3CAL/KWB_CAL.mdb"
+    mdbCal <- sprintf("\\\\%s/miacso$/Daten/ACCESS/KwbMonitoring/3CAL/KWB_CAL.mdb",
+                      get_servername())
   
   ## Return the result of the corresponding SQL query
   hsSqlQuery(mdbCal, hsSqlExCal(moniPoint, parAcronym, calName))
@@ -369,7 +371,9 @@ hsAvailCalibs <- function(
 ) 
 {
   if (is.null(mdbCal))
-    mdbCal <- "\\\\moby/miacso$/Daten/ACCESS/KwbMonitoring/3CAL/KWB_CAL.mdb"
+    mdbCal <- sprintf("\\\\%s/miacso$/Daten/ACCESS/KwbMonitoring/3CAL/KWB_CAL.mdb",
+                      get_servername()
+                      )
   
   # Get all calibration names
   cnames <- as.character(
